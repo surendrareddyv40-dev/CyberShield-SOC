@@ -1,33 +1,53 @@
+/* DEFAULT LIGHT / CREAM THEME */
 :root {
-  --bg-dark: #fbf9f5;      /* Warm Cream Background */
-  --bg-card: #ffffff;      /* Pure White Cards */
-  --bg-sidebar: #f3efe6;   /* Slightly Darker Cream Sidebar */
-  --border-col: #e2dacd;   /* Subtle Warm Border */
-  --txt-main: #1e293b;     /* Dark Charcoal Text */
-  --txt-sub: #64748b;      /* Slate Subtitle Text */
-  --accent-blue: #2563eb;   /* Vibrant Blue */
-  --accent-red: #dc2626;    /* Red Alert */
-  --accent-orange: #ea580c; /* Orange Alert */
-  --accent-green: #059669;  /* Green Safe Zone */
+  --bg-dark: #fbf9f5;
+  --bg-card: #ffffff;
+  --bg-sidebar: #f3efe6;
+  --border-col: #e2dacd;
+  --txt-main: #1e293b;
+  --txt-sub: #64748b;
+  --accent-blue: #2563eb;
+  --accent-red: #dc2626;
+  --accent-orange: #ea580c;
+  --accent-green: #059669;
+  --canvas-bg: #ffffff;
+  --grid-line: #e2e8f0;
+}
+
+/* DARK THEME OVERRIDES */
+[data-theme="dark"] {
+  --bg-dark: #0a0e17;
+  --bg-card: #121826;
+  --bg-sidebar: #0f1523;
+  --border-col: #1e293b;
+  --txt-main: #f8fafc;
+  --txt-sub: #64748b;
+  --accent-blue: #3b82f6;
+  --accent-red: #ef4444;
+  --accent-orange: #f97316;
+  --accent-green: #10b981;
+  --canvas-bg: #121826;
+  --grid-line: #1e293b;
 }
 
 * { 
   box-sizing: border-box; 
 }
 
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-  background-color: var(--bg-dark) !important;
-  color: var(--txt-main) !important;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--txt-main);
   font-size: 12px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* Topbar */
 .topbar {
   height: 45px;
-  background: var(--bg-sidebar) !important;
+  background: var(--bg-sidebar);
   border-bottom: 1px solid var(--border-col);
   display: flex;
   align-items: center;
@@ -38,11 +58,11 @@ html, body {
   z-index: 100;
 }
 
-.menu-btn {
+.menu-btn, .theme-btn {
   background: none;
   border: none;
   color: var(--txt-main);
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -55,10 +75,10 @@ html, body {
   color: var(--accent-blue); 
 }
 
-.notification-badge {
-  position: relative;
-  cursor: pointer;
-  font-size: 14px;
+.notification-badge { 
+  position: relative; 
+  cursor: pointer; 
+  font-size: 14px; 
 }
 
 .badge-count {
@@ -76,16 +96,16 @@ html, body {
 /* Notification Drawer */
 .notif-drawer {
   position: fixed;
-  top: 0;
-  right: -280px;
-  width: 260px;
+  top: 0; 
+  right: -280px; 
+  width: 260px; 
   height: 100%;
   background: var(--bg-sidebar);
   border-left: 1px solid var(--border-col);
   z-index: 1100;
   transition: right 0.25s ease-in-out;
   padding: 12px;
-  box-shadow: -4px 0 12px rgba(0,0,0,0.08);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.1);
 }
 
 .notif-drawer.open { 
@@ -129,26 +149,26 @@ html, body {
   position: fixed;
   top: 0; 
   left: 0; 
-  bottom: 0;
+  bottom: 0; 
   width: 200px;
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border-col);
   transform: translateX(-100%);
   transition: transform 0.25s ease-in-out;
   z-index: 1000;
-  box-shadow: 4px 0 12px rgba(0,0,0,0.08);
+  box-shadow: 4px 0 12px rgba(0,0,0,0.1);
 }
 
 .sidebar.open { 
   transform: translateX(0); 
 }
 
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 999;
+.sidebar-overlay { 
+  display: none; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0, 0, 0, 0.4); 
+  z-index: 999; 
 }
 
 .sidebar-overlay.open { 
@@ -171,12 +191,12 @@ html, body {
   margin: 0; 
 }
 
-.sidebar nav li {
-  padding: 12px 15px;
-  border-bottom: 1px solid var(--border-col);
-  color: var(--txt-sub);
-  cursor: pointer;
-  font-weight: 500;
+.sidebar nav li { 
+  padding: 12px 15px; 
+  border-bottom: 1px solid var(--border-col); 
+  color: var(--txt-sub); 
+  cursor: pointer; 
+  font-weight: 500; 
 }
 
 .sidebar nav li.active, .sidebar nav li:hover { 
@@ -187,7 +207,6 @@ html, body {
 /* Main Layout */
 .main-container { 
   padding: 10px; 
-  background-color: var(--bg-dark) !important;
 }
 
 .tab-content { 
@@ -198,7 +217,7 @@ html, body {
   display: block; 
 }
 
-/* Horizon Selector */
+/* Horizon Controls */
 .horizon-panel { 
   display: flex; 
   align-items: center; 
@@ -206,14 +225,14 @@ html, body {
   margin-bottom: 10px; 
 }
 
-.t-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border-col);
-  color: var(--txt-sub);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  cursor: pointer;
+.t-btn { 
+  background: var(--bg-card); 
+  border: 1px solid var(--border-col); 
+  color: var(--txt-sub); 
+  padding: 4px 8px; 
+  border-radius: 4px; 
+  font-size: 11px; 
+  cursor: pointer; 
 }
 
 .t-btn.active { 
@@ -222,7 +241,7 @@ html, body {
   border-color: var(--accent-blue); 
 }
 
-/* Compact Grid */
+/* Metric Cards */
 .compact-grid { 
   display: grid; 
   grid-template-columns: repeat(2, 1fr); 
@@ -231,11 +250,10 @@ html, body {
 }
 
 .mini-card { 
-  background: var(--bg-card) !important; 
+  background: var(--bg-card); 
   border: 1px solid var(--border-col); 
   padding: 8px 10px; 
   border-radius: 6px; 
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .mini-card .lbl { 
@@ -250,14 +268,13 @@ html, body {
   margin-top: 2px; 
 }
 
-/* Confidence & Badges */
 .conf-high { color: var(--accent-green); }
 .conf-med { color: var(--accent-orange); }
 .conf-low { color: var(--accent-red); }
 
 .badge-attack {
   display: inline-block;
-  background: rgba(220, 38, 38, 0.08);
+  background: rgba(220, 38, 38, 0.1);
   color: var(--accent-red);
   border: 1px solid var(--accent-red);
   padding: 2px 6px;
@@ -267,7 +284,7 @@ html, body {
   margin-top: 2px;
 }
 
-/* Three AI Engines */
+/* Engine Grid */
 .engine-grid { 
   display: grid; 
   grid-template-columns: repeat(3, 1fr); 
@@ -296,7 +313,7 @@ html, body {
   margin-top: 2px; 
 }
 
-/* SHAP Panel */
+/* SHAP Feature Bars */
 .shap-container { 
   display: flex; 
   flex-direction: column; 
@@ -341,14 +358,13 @@ html, body {
 .text-accent-bg { background: var(--accent-blue); }
 .text-green-bg { background: var(--accent-green); }
 
-/* Card Utilities */
+/* General Cards & Canvases */
 .card { 
-  background: var(--bg-card) !important; 
+  background: var(--bg-card); 
   border: 1px solid var(--border-col); 
   border-radius: 6px; 
   padding: 10px; 
   margin-bottom: 10px; 
-  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .card h4 { 
@@ -358,20 +374,12 @@ html, body {
   text-transform: uppercase; 
 }
 
-.map-box { 
+.map-box, .chart-box { 
   height: 160px; 
   width: 100%; 
   position: relative; 
-  background: #ffffff;
-  border-radius: 4px;
-}
-
-.chart-box { 
-  height: 140px; 
-  width: 100%; 
-  position: relative; 
-  background: #ffffff;
-  border-radius: 4px;
+  background: var(--canvas-bg); 
+  border-radius: 4px; 
 }
 
 canvas { 
@@ -409,9 +417,9 @@ th {
 code { 
   color: var(--accent-orange); 
   font-size: 10px; 
-  background: var(--bg-sidebar);
-  padding: 3px 6px;
-  border-radius: 3px;
+  background: var(--bg-sidebar); 
+  padding: 3px 6px; 
+  border-radius: 3px; 
 }
 
 .sm-btn { 
@@ -420,7 +428,7 @@ code {
   border: none; 
   padding: 4px 8px; 
   border-radius: 4px; 
-  cursor: pointer;
+  cursor: pointer; 
 }
 
 .sett-row { 
@@ -429,7 +437,7 @@ code {
   margin-bottom: 8px; 
 }
 
-/* Utility Text Colors */
+/* Text Accent Utilities */
 .text-danger { color: var(--accent-red); }
 .text-warning { color: var(--accent-orange); }
 .text-accent { color: var(--accent-blue); }
