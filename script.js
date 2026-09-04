@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     item.addEventListener('click', () => {
       const tab = item.getAttribute('data-tab');
 
+      // Update Navigation State
       navItems.forEach(i => i.classList.remove('active'));
       tabContents.forEach(c => c.classList.remove('active'));
 
@@ -32,8 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       closeMenu();
 
-      if (tab === 'network-radar') renderRadar();
-      if (tab === 'dashboard') renderMap();
+      // Trigger re-rendering of tab content
+      if (tab === 'network-radar') {
+        renderRadar();
+      }
+      
+      // CRITICAL FIX: Re-render map and chart when switching back to dashboard
+      if (tab === 'dashboard') {
+        renderMapAndDataView();
+      }
     });
   });
 
@@ -45,25 +53,38 @@ document.addEventListener('DOMContentLoaded', () => {
       b.classList.add('active');
 
       const time = b.getAttribute('data-time');
+      const trafVal = document.getElementById('trafVal');
+      const riskVal = document.getElementById('riskVal');
+
+      // Mock Data Update
       if (time === '22m') {
-        document.getElementById('riskVal').innerText = '62%';
-        document.getElementById('trafVal').innerText = '2.8k r/s';
+        trafVal.innerText = '2.8k r/s';
+        riskVal.innerText = '62%';
       } else if (time === '30m') {
-        document.getElementById('riskVal').innerText = '84%';
-        document.getElementById('trafVal').innerText = '4.2k r/s';
-      } else {
-        document.getElementById('riskVal').innerText = '30%';
-        document.getElementById('trafVal').innerText = '1.2k r/s';
+        trafVal.innerText = '4.2k r/s';
+        riskVal.innerText = '84%';
+      } else if (time === '1h') {
+        trafVal.innerText = '1.2k r/s';
+        riskVal.innerText = '30%';
       }
-      populateLogs();
+      populateLogsTable();
     });
   });
 
+  // -- MAIN DASHBOARD VIEW RENDERING FUNCTION --
+  function renderMapAndDataView() {
+    renderHackerMap();
+    renderMiniChart(); // Re-creates chart to prevent canvas reuse error
+    populateLogsTable();
+  }
+
   // Live Location Hacker Map (Canvas)
-  function renderMap() {
+  function renderHackerMap() {
     const canvas = document.getElementById('locationMap');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    
+    // Set internal dimensions to match parent CSS size
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
 
@@ -82,68 +103,101 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
     }
 
-    // Locations (Delhi, Frankfurt, Dallas, Tokyo)
+    // Target/Origin Locations
     const locations = [
-      { name: 'Delhi, IN', x: w * 0.65, y: h * 0.45, color: '#ef4444' },
-      { name: 'Frankfurt, DE', x: w * 0.45, y: h * 0.3, color: '#f97316' },
-      { name: 'Dallas, US', x: w * 0.2, y: h * 0.4, color: '#3b82f6' },
-      { name: 'Tokyo, JP', x: w * 0.85, y: h * 0.35, color: '#ef4444' }
+      { name: 'Delhi, IN (103.21.244.12)', x: w * 0.65, y: h * 0.45, color: '#ef4444', origin: false },
+      { name: 'Frankfurt, DE (Origin Tor)', x: w * 0.45, y: h * 0.3, color: '#f97316', origin: true },
+      { name: 'Dallas, US (Data Center)', x: w * 0.2, y: h * 0.4, color: '#3b82f6', origin: false },
+      { name: 'Tokyo, JP (Target)', x: w * 0.85, y: h * 0.35, color: '#ef4444', origin: false }
     ];
 
     locations.forEach(loc => {
       ctx.fillStyle = loc.color;
       ctx.beginPath();
-      ctx.arc(loc.x, loc.y, 4, 0, Math.PI * 2);
+      // origins are larger/bolder
+      ctx.arc(loc.x, loc.y, loc.origin ? 6 : 4, 0, Math.PI * 2);
       ctx.fill();
 
+      // location text
       ctx.fillStyle = '#94a3b8';
       ctx.font = '9px sans-serif';
-      ctx.fillText(loc.name, loc.x + 6, loc.y + 3);
+      ctx.fillText(loc.name, loc.x + 8, loc.y + 3);
     });
   }
 
   // Mini Chart Rendering
-  const miniCtx = document.getElementById('miniChart').getContext('2d');
-  new Chart(miniCtx, {
-    type: 'line',
-    data: {
-      labels: ['-30m', '-22m', '-10m', 'Now', '+15m'],
-      datasets: [{
-        data: [1200, 2800, 1800, 4200, 5800],
-        borderColor: '#ef4444',
-        borderWidth: 1.5,
-        tension: 0.3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#64748b', font: { size: 9 } } },
-        y: { ticks: { color: '#64748b', font: { size: 9 } } }
-      }
-    }
-  });
+  // CRITICAL FIX: Canvas reuse often fails. Safer to destroy and replace the entire canvas element.
+  function renderMiniChart() {
+    const container = document.getElementById('chartBoxContainer');
+    if (!container) return;
 
-  // Populate Table Logs
-  function populateLogs() {
+    // Remove old canvas
+    container.innerHTML = '';
+    
+    // Create new canvas
+    const newCanvas = document.createElement('canvas');
+    newCanvas.id = 'miniChart';
+    container.appendChild(newCanvas);
+
+    const miniCtx = newCanvas.getContext('2d');
+
+    // MOCK DATA: Server Traffic Forecast
+    new Chart(miniCtx, {
+      type: 'line',
+      data: {
+        labels: ['-30m', '-22m', '-10m', 'Now', '+15m (Forecast)'],
+        datasets: [{
+          label: 'Incoming Traffic Baseline (req/s)',
+          data: [1200, 2800, 1800, 4200, null],
+          borderColor: '#2563eb', // Blue
+          borderWidth: 1.5,
+          tension: 0.3
+        },{
+          label: 'Predicted Vector Spike (req/s)',
+          data: [null, null, null, 4200, 6800],
+          borderColor: '#ef4444', // Red
+          borderDash: [5, 5],
+          borderWidth: 2,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#64748b', font: { size: 9 } } },
+          y: { 
+            ticks: { color: '#64748b', font: { size: 9 } },
+            title: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  // Populate Table Logs & Node List
+  function populateLogsTable() {
+    const tableBody = document.getElementById('logsTable');
+    const nodeList = document.getElementById('nodeList');
+    if (!tableBody) return;
+
     const logs = [
-      { time: '-22m', loc: 'Delhi, IN (103.21.244.12)', type: 'SSH Brute' },
-      { time: '-18m', loc: 'Frankfurt, DE (185.220.101.5)', type: 'SYN Flood' },
-      { time: '-5m', loc: 'Tokyo, JP (114.114.114.114)', type: 'Port Scan' }
+      { time: '-22m', loc: 'Delhi, IN (Target: API Gateway)', type: 'SYN Flood' },
+      { time: '-18m', loc: 'Frankfurt, DE (Origin: Tor Exit)', type: 'Brute Force' },
+      { time: '-5m', loc: 'Tokyo, JP (Target: DB Cluster)', type: 'Port Scan' }
     ];
 
-    const tbody = document.getElementById('logsTable');
-    const nodeList = document.getElementById('nodeList');
-    tbody.innerHTML = '';
+    tableBody.innerHTML = '';
     if (nodeList) nodeList.innerHTML = '';
 
     logs.forEach(l => {
+      // populate table
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${l.time}</td><td>${l.loc}</td><td class="text-danger">${l.type}</td>`;
-      tbody.appendChild(tr);
+      tableBody.appendChild(tr);
 
+      // populate radar view node list if needed
       if (nodeList) {
         const li = document.createElement('li');
         li.innerHTML = `<strong>${l.loc}</strong> - ${l.type}`;
@@ -152,12 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Radar Animation
+  // -- RADAR VIEW RENDERING FUNCTION --
   let rAngle = 0;
   function renderRadar() {
     const canvas = document.getElementById('radarCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    
+    // Match parent container size
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
 
@@ -168,24 +224,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Radar Rings
     ctx.strokeStyle = '#10b98144';
+    ctx.lineWidth = 1;
     for (let radius = 20; radius <= r; radius += 25) {
       ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke();
     }
+
+    // Crosshairs
+    ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+    ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
 
     // Sweep Line
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(rAngle);
-    ctx.fillStyle = 'rgba(16, 185, 129, 0.15)';
+    
+    const gradient = ctx.createConicGradient(0, 0, 0);
+    gradient.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+    gradient.addColorStop(0.2, 'transparent');
+    
+    ctx.fillStyle = gradient;
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r, 0, Math.PI / 4); ctx.fill();
     ctx.restore();
 
     rAngle += 0.04;
+    // Keep animation looping
     requestAnimationFrame(renderRadar);
   }
 
-  // Initial call
-  renderMap();
-  populateLogs();
-  window.addEventListener('resize', renderMap);
+  // --- INITIAL PAGE LOAD SETUP ---
+  renderMapAndDataView();
+  
+  // Re-run canvas draws on window resize to keep things crisp
+  window.addEventListener('resize', () => {
+    // Only update if current view is Dashboard
+    if (document.getElementById('dashboard').classList.contains('active')) {
+      renderHackerMap();
+      // Chartjs handles resize automatically, but map canvas needs redraw
+    }
+  });
+
 });
