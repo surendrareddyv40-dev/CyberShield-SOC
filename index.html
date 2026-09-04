@@ -3,179 +3,218 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ASTRA-FORECAST | Predictive Cyber Radar</title>
+  <title>ASTRA FORECAST RADAR</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Top Navigation Bar -->
+  <!-- Top Bar with Real-Time Alerts -->
   <div class="topbar">
     <button class="menu-btn" id="menuBtn">☰</button>
-    <div class="topbar-title">ASTRA <span>ENSEMBLE RADAR</span></div>
-    <div class="topbar-badge badge-critical">HIGH RISK</div>
+    <div class="topbar-title">ASTRA <span>RADAR</span></div>
+    <div class="notification-badge" id="notifBtn">
+      🔔 <span class="badge-count" id="notifCount">3</span>
+    </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- Mobile Drawer / Sidebar -->
+  <!-- Notification Drawer (Feature 8) -->
+  <div class="notif-drawer" id="notifDrawer">
+    <div class="notif-header">
+      <h4>Real-Time Alerts</h4>
+      <button id="closeNotif">✕</button>
+    </div>
+    <ul class="notif-list" id="notifList">
+      <!-- Dynamically Populated -->
+    </ul>
+  </div>
+
+  <!-- Sidebar Drawer Navigation -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <h3>ASTRA v2.0 AI</h3>
-      <small>GNN + LSTM + XGBoost</small>
+      <h3>ASTRA v3.0</h3>
     </div>
     <nav>
       <ul>
         <li class="nav-item active" data-tab="dashboard">Dashboard</li>
-        <li class="nav-item" data-tab="network-radar">GNN Topology</li>
-        <li class="nav-item" data-tab="threat-intel">Threat Intel & SHAP</li>
+        <li class="nav-item" data-tab="network-radar">Network Radar</li>
+        <li class="nav-item" data-tab="threat-intel">Threat Intel</li>
         <li class="nav-item" data-tab="settings">Settings</li>
       </ul>
     </nav>
   </aside>
 
-  <!-- Main View Container -->
+  <!-- Main Container -->
   <main class="main-container">
 
     <!-- DASHBOARD VIEW -->
     <section id="dashboard" class="tab-content active">
 
       <!-- FEATURE 1: Multi-Horizon Forecast Panel -->
-      <div class="card horizon-card">
-        <h4>1. Multi-Horizon Threat Forecast</h4>
-        <div class="horizon-grid">
-          <div class="horizon-box">
-            <span class="horizon-lbl">+5 Min</span>
-            <span class="horizon-val text-warning">64% Risk</span>
-            <small>SYN Probe</small>
-          </div>
-          <div class="horizon-box">
-            <span class="horizon-lbl">+15 Min</span>
-            <span class="horizon-val text-danger">88% Risk</span>
-            <small>DDoS Ramp</small>
-          </div>
-          <div class="horizon-box highlight">
-            <span class="horizon-lbl">+30 Min</span>
-            <span class="horizon-val text-danger">96% Risk</span>
-            <small>Peak Impact</small>
-          </div>
-          <div class="horizon-box">
-            <span class="horizon-lbl">+1 Hour</span>
-            <span class="horizon-val text-green">22% Risk</span>
-            <small>Auto Mitigation</small>
-          </div>
+      <div class="horizon-panel">
+        <span class="lbl">Horizon Window:</span>
+        <button class="t-btn active" data-time="15m">15m</button>
+        <button class="t-btn" data-time="30m">30m</button>
+        <button class="t-btn" data-time="1h">1h</button>
+        <button class="t-btn" data-time="24h">24h</button>
+      </div>
+
+      <!-- Top Metric Cards -->
+      <div class="compact-grid">
+        <div class="mini-card text-danger">
+          <span class="lbl">Threat Level</span>
+          <div class="val">CRITICAL</div>
+        </div>
+
+        <!-- FEATURE 5: Confidence Score with Color Coding -->
+        <div class="mini-card">
+          <span class="lbl">AI Confidence</span>
+          <div class="val conf-high" id="confScore">94.8%</div>
+        </div>
+
+        <div class="mini-card">
+          <span class="lbl">Traffic Baseline</span>
+          <div class="val" id="trafVal">4.2k r/s</div>
+        </div>
+
+        <!-- FEATURE 6: Attack Type Classification Badge -->
+        <div class="mini-card">
+          <span class="lbl">Attack Vector</span>
+          <div class="badge-attack" id="attackBadge">SYN-FLOOD (DDoS)</div>
         </div>
       </div>
 
       <!-- FEATURE 3: Three AI Engines Status Panel -->
       <div class="card">
-        <h4>3. Tri-Engine AI Ensemble Status</h4>
+        <h4>Ensemble AI Engine Pipeline</h4>
         <div class="engine-grid">
-          <div class="engine-box">
-            <div class="engine-header">
-              <strong>LSTM Engine</strong>
-              <span class="status-dot green"></span>
-            </div>
-            <small>Time-Series Volumetric Spike</small>
-            <div class="metric-row">Conf: <strong>94.2%</strong></div>
+          <div class="engine-status active">
+            <span class="e-name">LSTM Predictor</span>
+            <span class="e-state">ACTIVE (99.2%)</span>
           </div>
-          <div class="engine-box">
-            <div class="engine-header">
-              <strong>GNN Engine</strong>
-              <span class="status-dot green"></span>
-            </div>
-            <small>Topology Anomaly Correlation</small>
-            <div class="metric-row">Conf: <strong>91.8%</strong></div>
+          <div class="engine-status active">
+            <span class="e-name">Spatial GNN</span>
+            <span class="e-state">ACTIVE (96.4%)</span>
           </div>
-          <div class="engine-box">
-            <div class="engine-header">
-              <strong>XGBoost Engine</strong>
-              <span class="status-dot green"></span>
-            </div>
-            <small>Packet Payload Classification</small>
-            <div class="metric-row">Conf: <strong>97.5%</strong></div>
+          <div class="engine-status active">
+            <span class="e-name">XGBoost SHAP</span>
+            <span class="e-state">ACTIVE (98.1%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURE 2: SHAP Explainability Panel -->
+      <div class="card">
+        <h4>SHAP Feature Attribution (Explainability)</h4>
+        <div class="shap-container">
+          <div class="shap-row">
+            <span class="s-label">SYN Packet Ratio</span>
+            <div class="s-bar-bg"><div class="s-bar text-danger-bg" style="width: 88%;"></div></div>
+            <span class="s-val">+0.42</span>
+          </div>
+          <div class="shap-row">
+            <span class="s-label">Port Scan Rate</span>
+            <div class="s-bar-bg"><div class="s-bar text-warning-bg" style="width: 65%;"></div></div>
+            <span class="s-val">+0.28</span>
+          </div>
+          <div class="shap-row">
+            <span class="s-label">Geo-Anomaly Index</span>
+            <div class="s-bar-bg"><div class="s-bar text-accent-bg" style="width: 45%;"></div></div>
+            <span class="s-val">+0.15</span>
+          </div>
+          <div class="shap-row">
+            <span class="s-label">Payload Size Deviation</span>
+            <div class="s-bar-bg"><div class="s-bar text-green-bg" style="width: 20%;"></div></div>
+            <span class="s-val">-0.08</span>
           </div>
         </div>
       </div>
 
       <!-- FEATURE 7: Real-Time Traffic vs Predicted Traffic Chart -->
       <div class="card">
-        <h4>7. Real-Time vs Predicted Traffic Chart</h4>
+        <h4>Real-Time Traffic vs Multi-Horizon Forecast</h4>
         <div class="chart-box">
-          <canvas id="trafficForecastChart"></canvas>
+          <canvas id="miniChart"></canvas>
         </div>
       </div>
 
-      <!-- FEATURE 2: SHAP Explainability Panel -->
+      <!-- Hacker Live Locations -->
       <div class="card">
-        <h4>2. SHAP Model Explainability Panel</h4>
-        <p class="sub-text">Top feature attribution contributing to current alert score:</p>
-        <div class="shap-container" id="shapContainer">
-          <!-- Dynamically Rendered -->
-        </div>
-      </div>
-
-      <!-- FEATURE 4: Network Topology Graph -->
-      <div class="card">
-        <h4>4. GNN Network Topology Map</h4>
+        <h4>Targeted Locations & Origins</h4>
         <div class="map-box">
-          <canvas id="gnnTopologyCanvas"></canvas>
+          <canvas id="locationMap"></canvas>
         </div>
       </div>
 
-      <!-- FEATURE 5, 6 & 8: Alert Log & Classification Badges -->
+      <!-- FEATURE 9: Auto-Response Action Log -->
       <div class="card">
-        <h4>8. Alert Log & Classification Feed</h4>
+        <h4>Auto-Response Action Log</h4>
         <div class="tbl-box">
           <table>
             <thead>
               <tr>
                 <th>Time</th>
                 <th>Target Node</th>
-                <th>6. Attack Type</th>
-                <th>5. Confidence Score</th>
+                <th>Mitigation Triggered</th>
+                <th>Status</th>
               </tr>
             </thead>
-            <tbody id="alertLogTable">
+            <tbody id="autoActionTable">
               <!-- JS Injected -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- FEATURE 9: Auto-Response Action Log -->
-      <div class="card">
-        <h4>9. Automated Mitigation Action Log</h4>
-        <div class="action-log-list" id="actionLogList">
-          <!-- JS Injected -->
-        </div>
-      </div>
-
     </section>
 
-    <!-- OTHER TAB VIEWS -->
+    <!-- NETWORK RADAR VIEW -->
     <section id="network-radar" class="tab-content">
+      <!-- FEATURE 4: Network Topology Graph (Proves GNN) -->
       <div class="card">
-        <h4>Full Screen GNN Topology View</h4>
-        <div class="map-box large">
-          <canvas id="gnnRadarCanvas"></canvas>
+        <h4>GNN Network Topology Mesh</h4>
+        <div class="map-box">
+          <canvas id="gnnTopologyCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Live Threat Sweep</h4>
+        <div class="map-box">
+          <canvas id="radarCanvas"></canvas>
         </div>
       </div>
     </section>
 
+    <!-- THREAT INTEL VIEW -->
     <section id="threat-intel" class="tab-content">
       <div class="card">
-        <h4>Delhi Subnet Threat Profile</h4>
-        <p><strong>Vector Target:</strong> Delhi API Gateway Subnet</p>
-        <p><strong>Predictive Vector:</strong> Distributed SYN Volumetric Exhaustion</p>
+        <h4>Delhi Node Attack Intelligence</h4>
+        <p><strong>Origin IP:</strong> 103.21.244.12 (Delhi, IN)</p>
+        <p><strong>Attack Vector:</strong> SYN-FLOOD / SSH Brute Force</p>
+        <p><strong>Risk Index:</strong> 8.9 / 10</p>
+      </div>
+      <div class="card">
+        <h4>Automated Firewall Rules</h4>
+        <div class="action-row">
+          <code>iptables -A INPUT -s 103.21.244.12 -j DROP</code>
+          <button class="sm-btn">Execute</button>
+        </div>
       </div>
     </section>
 
+    <!-- SETTINGS VIEW -->
     <section id="settings" class="tab-content">
       <div class="card">
-        <h4>Ensemble Engine Rules</h4>
+        <h4>Model Controls</h4>
         <div class="sett-row">
-          <span>Auto Block (Threshold &gt; 85%)</span>
+          <span>Enable Ensemble AI Auto-Mitigation</span>
           <input type="checkbox" checked>
+        </div>
+        <div class="sett-row">
+          <span>GNN Graph Depth</span>
+          <input type="range" value="3" min="1" max="5">
         </div>
       </div>
     </section>
