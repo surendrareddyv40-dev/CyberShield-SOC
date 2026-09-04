@@ -1,464 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ASTRA RADAR</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASTRA Radar</title>
   <style>
-    /* =========================================================
-       1. BLACK & WHITE THEMES (Light/White vs Dark/Black)
-       ========================================================= */
-    :root {
-      /* LIGHT / WHITE THEME */
-      --bg-dark: #fbf9f5;
-      --bg-card: #ffffff;
-      --bg-sidebar: #f5f2eb;
-      --border-col: #e8e2d5;
-      --txt-main: #1e293b;
-      --txt-sub: #64748b;
-      --accent-blue: #2563eb;
-      --accent-red: #dc2626;
-      --accent-orange: #ea580c;
-      --accent-green: #059669;
-      --canvas-bg: #ffffff;
-      --grid-line: #f1f5f9;
-    }
-
-    [data-theme="dark"] {
-      /* PURE BLACK / DARK THEME */
-      --bg-dark: #000000;
-      --bg-card: #111111;
-      --bg-sidebar: #0a0a0a;
-      --border-col: #222222;
-      --txt-main: #ffffff;
-      --txt-sub: #a1a1aa;
-      --accent-blue: #3b82f6;
-      --accent-red: #ef4444;
-      --accent-orange: #f97316;
-      --accent-green: #10b981;
-      --canvas-bg: #111111;
-      --grid-line: #222222;
-    }
-
-    * { box-sizing: border-box; }
-
+    /* Basic Layout & Theme Setup */
     body {
       margin: 0;
-      padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--txt-main);
-      font-size: 12px;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      background-color: #0d0d0d;
+      color: #ffffff;
     }
 
-    /* TOPBAR */
-    .topbar {
-      height: 48px;
-      background: var(--bg-dark);
-      border-bottom: 1px solid var(--border-col);
+    /* Top Navigation Header */
+    header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 0 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      align-items: center;
+      padding: 12px 16px;
+      background-color: #121212;
+      border-bottom: 1px solid #222;
     }
 
     .menu-btn {
       background: none;
       border: none;
-      color: var(--txt-main);
-      font-size: 18px;
-      cursor: pointer;
-      padding: 0;
-    }
-
-    .topbar-title { 
-      font-weight: 800; 
-      font-size: 15px; 
-      letter-spacing: 0.5px;
-    }
-    .topbar-title span { color: var(--accent-blue); }
-
-    /* ICON THEME TOGGLE BUTTON (MATCHING SCREENSHOT) */
-    .icon-btn {
-      background: none;
-      border: none;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 2px 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .notification-badge { position: relative; cursor: pointer; font-size: 18px; }
-    .badge-count {
-      background: var(--accent-red);
       color: #fff;
-      font-size: 8px;
-      font-weight: bold;
-      padding: 2px 4px;
-      border-radius: 8px;
-      position: absolute;
-      top: -3px;
-      right: -5px;
+      font-size: 20px;
+      cursor: pointer;
     }
 
-    /* LAYOUT CONTENT */
-    .main-container { padding: 12px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* HORIZON WINDOW BUTTONS */
-    .horizon-panel { 
-      display: flex; 
-      align-items: center; 
-      gap: 6px; 
-      margin-bottom: 12px; 
-      font-weight: 600;
-    }
-    .t-btn { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border-col); 
-      color: var(--txt-sub); 
-      padding: 5px 10px; 
-      border-radius: 6px; 
-      font-size: 11px; 
-      cursor: pointer; 
-    }
-    .t-btn.active { 
-      background: var(--accent-blue); 
-      color: #fff; 
-      border-color: var(--accent-blue); 
-    }
-
-    /* GRID STAT CARDS */
-    .compact-grid { 
-      display: grid; 
-      grid-template-columns: repeat(2, 1fr); 
-      gap: 10px; 
-      margin-bottom: 12px; 
-    }
-    .mini-card { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border-col); 
-      padding: 10px 12px; 
-      border-radius: 8px; 
-    }
-    .mini-card .lbl { color: var(--txt-sub); font-size: 10px; font-weight: 500; display: block; }
-    .mini-card .val { font-size: 14px; font-weight: 800; margin-top: 4px; }
-
-    .conf-high { color: var(--accent-green); }
-    .badge-attack { 
-      display: inline-block; 
-      background: rgba(220, 38, 38, 0.08); 
-      color: var(--accent-red); 
-      border: 1px solid var(--accent-red); 
-      padding: 3px 6px; 
-      border-radius: 4px; 
-      font-size: 10px; 
-      font-weight: 700; 
-      margin-top: 4px; 
-    }
-
-    /* CARDS STRUCTURE */
-    .card { 
-      background: var(--bg-card); 
-      border: 1px solid var(--border-col); 
-      border-radius: 8px; 
-      padding: 12px; 
-      margin-bottom: 12px; 
-    }
-    .card h4 { 
-      margin: 0 0 10px 0; 
-      font-size: 11px; 
-      color: var(--txt-sub); 
-      text-transform: uppercase; 
-      letter-spacing: 0.5px;
-      font-weight: 700;
-    }
-
-    /* PIPELINE ENGINES */
-    .engine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .engine-status { 
-      background: var(--bg-sidebar); 
-      border: 1px solid var(--border-col); 
-      padding: 8px 4px; 
-      border-radius: 6px; 
-      text-align: center; 
-    }
-    .e-name { display: block; font-size: 9px; color: var(--txt-sub); font-weight: 500; }
-    .e-state { display: block; font-size: 9px; color: var(--accent-green); font-weight: 700; margin-top: 2px; }
-
-    /* SHAP ATTRIBUTION */
-    .shap-container { display: flex; flex-direction: column; gap: 8px; }
-    .shap-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .s-label { font-size: 10px; width: 120px; color: var(--txt-sub); font-weight: 500; }
-    .s-bar-bg { flex: 1; height: 7px; background: var(--bg-sidebar); border-radius: 4px; overflow: hidden; }
-    .s-bar { height: 100%; border-radius: 4px; }
-    .s-val { font-size: 10px; font-weight: 700; width: 35px; text-align: right; }
-
-    .text-danger-bg { background: var(--accent-red); }
-    .text-warning-bg { background: var(--accent-orange); }
-    .text-accent-bg { background: var(--accent-blue); }
-    .text-green-bg { background: var(--accent-green); }
-
-    /* CANVAS / CHARTS */
-    .chart-box { height: 150px; width: 100%; position: relative; background: var(--canvas-bg); border-radius: 4px; }
-    canvas { width: 100% !important; height: 100% !important; display: block; }
-
-    /* DRAWERS & OVERLAY */
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); z-index: 999; }
-    .sidebar-overlay.open { display: block; }
-
+    /* Sidebar Drawer Navigation */
     .sidebar {
-      position: fixed; top: 0; left: 0; bottom: 0; width: 220px;
-      background: var(--bg-sidebar); border-right: 1px solid var(--border-col);
-      transform: translateX(-100%); transition: transform 0.25s ease-in-out;
-      z-index: 1000; padding: 15px;
+      position: fixed;
+      top: 0;
+      left: -260px; /* Hidden off-screen by default */
+      width: 250px;
+      height: 100%;
+      background-color: #121212;
+      border-right: 1px solid #222;
+      transition: left 0.3s ease;
+      z-index: 1000;
+      padding: 20px 0;
     }
-    .sidebar.open { transform: translateX(0); }
-    .brand h3 { margin: 0 0 15px 0; color: var(--accent-blue); }
-    .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
-    .sidebar nav li { padding: 10px 0; border-bottom: 1px solid var(--border-col); color: var(--txt-sub); cursor: pointer; font-weight: 500; }
-    .sidebar nav li.active { color: var(--accent-blue); font-weight: bold; }
 
-    .text-danger { color: var(--accent-red); }
+    .sidebar.open {
+      left: 0; /* Slides into view */
+    }
+
+    .sidebar-title {
+      color: #3b82f6;
+      font-weight: bold;
+      padding: 0 20px 20px 20px;
+      margin: 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 14px 20px;
+      color: #aaa;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #3b82f6;
+      background-color: #1a1a1a;
+    }
+
+    /* Backdrop overlay when sidebar opens on mobile */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    /* Content Area Styles */
+    .main-content {
+      padding: 16px;
+    }
+
+    .tab-content {
+      display: none; /* Hidden by default */
+    }
+
+    .tab-content.active {
+      display: block; /* Active tab is shown */
+    }
   </style>
 </head>
 <body>
 
-  <!-- HEADER WITH MOON/SUN TOGGLE ICON -->
-  <div class="topbar">
-    <button class="menu-btn" id="menuBtn">☰</button>
-    <div class="topbar-title">ASTRA <span>RADAR</span></div>
+  <!-- Top Header -->
+  <header>
+    <button class="menu-btn" id="toggle-sidebar">☰</button>
+    <div style="font-weight: bold; letter-spacing: 1px;">ASTRA RADAR</div>
+    <div>🔔</div>
+  </header>
+
+  <!-- Overlay for clicking outside menu -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Sliding Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <h3 class="sidebar-title">ASTRA v3.0</h3>
+    <a href="#" class="nav-link active" data-tab="dashboard">Dashboard</a>
+    <a href="#" class="nav-link" data-tab="network-radar">Network Radar</a>
+    <a href="#" class="nav-link" data-tab="threat-intel">Threat Intel</a>
+    <a href="#" class="nav-link" data-tab="settings">Settings</a>
+  </nav>
+
+  <!-- Main View Container -->
+  <main class="main-content">
     
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <!-- ICON SWITCH BUTTON -->
-      <button class="icon-btn" id="themeToggle" title="Toggle Dark/Light Mode">
-        <span id="themeIcon">🌙</span>
-      </button>
+    <!-- 1. DASHBOARD TAB -->
+    <section id="dashboard" class="tab-content active">
+      <h2>Dashboard View</h2>
+      <p>All your threat metrics, charts, and real-time state remain loaded here.</p>
+      <!-- Insert your existing horizon selector, cards, and charts here -->
+    </section>
 
-      <div class="notification-badge" id="notifBtn">
-        🔔 <span class="badge-count">3</span>
-      </div>
-    </div>
-  </div>
+    <!-- 2. NETWORK RADAR TAB -->
+    <section id="network-radar" class="tab-content">
+      <h2>Network Radar View</h2>
+      <p>Live network monitoring details and packet inspection streams.</p>
+    </section>
 
-  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <!-- 3. THREAT INTEL TAB -->
+    <section id="threat-intel" class="tab-content">
+      <h2>Threat Intelligence</h2>
+      <p>Database feed for IP reputations, attack vectors, and signatures.</p>
+    </section>
 
-  <!-- SIDEBAR NAVIGATION -->
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <h3>ASTRA v3.0</h3>
-    </div>
-    <nav>
-      <ul>
-        <li class="nav-item active">Dashboard</li>
-        <li class="nav-item">Network Radar</li>
-        <li class="nav-item">Threat Intel</li>
-        <li class="nav-item">Settings</li>
-      </ul>
-    </nav>
-  </aside>
-
-  <!-- MAIN CONTAINER -->
-  <main class="main-container">
-
-    <div class="horizon-panel">
-      <span>Horizon Window:</span>
-      <button class="t-btn active">15m</button>
-      <button class="t-btn">30m</button>
-      <button class="t-btn">1h</button>
-      <button class="t-btn">24h</button>
-    </div>
-
-    <!-- METRICS GRID -->
-    <div class="compact-grid">
-      <div class="mini-card">
-        <span class="lbl">Threat Level</span>
-        <div class="val text-danger">CRITICAL</div>
-      </div>
-      <div class="mini-card">
-        <span class="lbl">AI Confidence</span>
-        <div class="val conf-high">94.8%</div>
-      </div>
-      <div class="mini-card">
-        <span class="lbl">Traffic Baseline</span>
-        <div class="val">4.2k r/s</div>
-      </div>
-      <div class="mini-card">
-        <span class="lbl">Attack Vector</span>
-        <div class="badge-attack">SYN-FLOOD (DDoS)</div>
-      </div>
-    </div>
-
-    <!-- AI ENGINE PIPELINE -->
-    <div class="card">
-      <h4>ENSEMBLE AI ENGINE PIPELINE</h4>
-      <div class="engine-grid">
-        <div class="engine-status">
-          <span class="e-name">LSTM Predictor</span>
-          <span class="e-state">ACTIVE (99.2%)</span>
-        </div>
-        <div class="engine-status">
-          <span class="e-name">Spatial GNN</span>
-          <span class="e-state">ACTIVE (96.4%)</span>
-        </div>
-        <div class="engine-status">
-          <span class="e-name">XGBoost SHAP</span>
-          <span class="e-state">ACTIVE (98.1%)</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- SHAP FEATURE ATTRIBUTION -->
-    <div class="card">
-      <h4>SHAP FEATURE ATTRIBUTION (EXPLAINABILITY)</h4>
-      <div class="shap-container">
-        <div class="shap-row">
-          <span class="s-label">SYN Packet Ratio</span>
-          <div class="s-bar-bg"><div class="s-bar text-danger-bg" style="width: 88%;"></div></div>
-          <span class="s-val">+0.42</span>
-        </div>
-        <div class="shap-row">
-          <span class="s-label">Port Scan Rate</span>
-          <div class="s-bar-bg"><div class="s-bar text-warning-bg" style="width: 65%;"></div></div>
-          <span class="s-val">+0.28</span>
-        </div>
-        <div class="shap-row">
-          <span class="s-label">Geo-Anomaly Index</span>
-          <div class="s-bar-bg"><div class="s-bar text-accent-bg" style="width: 45%;"></div></div>
-          <span class="s-val">+0.15</span>
-        </div>
-        <div class="shap-row">
-          <span class="s-label">Payload Size Deviation</span>
-          <div class="s-bar-bg"><div class="s-bar text-green-bg" style="width: 25%;"></div></div>
-          <span class="s-val">-0.08</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- REAL TIME TRAFFIC CHART -->
-    <div class="card">
-      <h4>REAL-TIME TRAFFIC VS MULTI-HORIZON FORECAST</h4>
-      <div class="chart-box">
-        <canvas id="trafficChart"></canvas>
-      </div>
-    </div>
+    <!-- 4. SETTINGS TAB -->
+    <section id="settings" class="tab-content">
+      <h2>Settings</h2>
+      <p>Configure model thresholds, notifications, and pipeline parameters.</p>
+    </section>
 
   </main>
 
+  <!-- JavaScript Navigation Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-
-      // --- BLACK & WHITE THEME SWITCHER LOGIC ---
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-
-      // Default to Light or saved theme preference
-      let isDark = localStorage.getItem('astra-theme') === 'dark';
-
-      function applyTheme() {
-        if (isDark) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          if (themeIcon) themeIcon.textContent = '☀️';
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          if (themeIcon) themeIcon.textContent = '🌙';
-        }
-        drawChart(); // Redraw chart colors on theme switch
-      }
-
-      applyTheme();
-
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          isDark = !isDark;
-          localStorage.setItem('astra-theme', isDark ? 'dark' : 'light');
-          applyTheme();
-        });
-      }
-
-      // --- SIDEBAR MENU TOGGLE ---
-      const menuBtn = document.getElementById('menuBtn');
+      const toggleBtn = document.getElementById('toggle-sidebar');
       const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
+      const overlay = document.getElementById('overlay');
+      const navLinks = document.querySelectorAll('.nav-link');
+      const tabContents = document.querySelectorAll('.tab-content');
 
-      if (menuBtn) {
-        menuBtn.addEventListener('click', () => {
-          sidebar.classList.toggle('open');
-          overlay.classList.toggle('open');
+      // Helper function to open/close drawer
+      function toggleMenu() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+      }
+
+      toggleBtn.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+
+      // Tab Switching Handler
+      navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+
+          const targetTabId = link.getAttribute('data-tab');
+          if (!targetTabId) return;
+
+          // 1. Update Active state on sidebar links
+          navLinks.forEach(nav => nav.classList.remove('active'));
+          link.classList.add('active');
+
+          // 2. Hide all view panels and display only target section
+          tabContents.forEach(content => {
+            if (content.id === targetTabId) {
+              content.style.display = 'block';
+              content.classList.add('active');
+            } else {
+              content.style.display = 'none';
+              content.classList.remove('active');
+            }
+          });
+
+          // 3. Automatically close sidebar after choosing an item
+          toggleMenu();
+
+          // 4. Force browser resize event to ensure Chart.js/Canvas components render correctly
+          window.dispatchEvent(new Event('resize'));
         });
-      }
-
-      if (overlay) {
-        overlay.addEventListener('click', () => {
-          sidebar.classList.remove('open');
-          overlay.classList.remove('open');
-        });
-      }
-
-      // --- CHART CANVAS DRAWING ---
-      function drawChart() {
-        const canvas = document.getElementById('trafficChart');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = canvas.parentElement.clientWidth || 300;
-        canvas.height = canvas.parentElement.clientHeight || 150;
-
-        const w = canvas.width, h = canvas.height;
-        const paddingLeft = 20, paddingBottom = 15;
-        const chartW = w - paddingLeft - 10, chartH = h - paddingBottom - 10;
-
-        // Background
-        ctx.fillStyle = isDark ? '#111111' : '#ffffff';
-        ctx.fillRect(0, 0, w, h);
-
-        // Horizontal Gridlines
-        ctx.strokeStyle = isDark ? '#222222' : '#f1f5f9';
-        ctx.lineWidth = 1;
-        for (let y = 0.25; y <= 1.0; y += 0.25) {
-          const yPos = chartH * y;
-          ctx.beginPath();
-          ctx.moveTo(paddingLeft, yPos);
-          ctx.lineTo(w - 10, yPos);
-          ctx.stroke();
-        }
-
-        // Orange Baseline
-        ctx.strokeStyle = '#f97316';
-        ctx.setLineDash([2, 2]);
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.05, chartH * 0.82);
-        ctx.lineTo(paddingLeft + chartW * 0.95, chartH * 0.8);
-        ctx.stroke();
-
-        // Blue Traffic Line
-        ctx.setLineDash([]);
-        ctx.strokeStyle = '#2563eb';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.05, chartH * 0.82);
-        ctx.lineTo(paddingLeft + chartW * 0.35, chartH * 0.8);
-        ctx.lineTo(paddingLeft + chartW * 0.55, chartH * 0.45);
-        ctx.stroke();
-
-        // Red Forecast Projection
-        ctx.strokeStyle = '#ef4444';
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.55, chartH * 0.45);
-        ctx.lineTo(paddingLeft + chartW * 0.95, chartH * 0.2);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      window.addEventListener('resize', drawChart);
+      });
     });
   </script>
 </body>
