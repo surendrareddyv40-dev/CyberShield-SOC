@@ -1,20 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Navigation Drawer Controls
+  // Theme Switcher Logic
+  const themeToggle = document.getElementById('themeToggle');
+  let currentTheme = localStorage.getItem('astra-theme') || 'light';
+
+  if (currentTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    if (themeToggle) themeToggle.innerText = '☀️';
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      if (document.documentElement.getAttribute('data-theme') === 'dark') {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggle.innerText = '🌙';
+        localStorage.setItem('astra-theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.innerText = '☀️';
+        localStorage.setItem('astra-theme', 'dark');
+      }
+      renderDashboardComponents();
+    });
+  }
+
+  // Drawers & Navigation Elements
   const menuBtn = document.getElementById('menuBtn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebarOverlay');
   const navItems = document.querySelectorAll('.nav-item');
   const tabContents = document.querySelectorAll('.tab-content');
-
-  // Notifications Drawer Controls
   const notifBtn = document.getElementById('notifBtn');
   const notifDrawer = document.getElementById('notifDrawer');
   const closeNotif = document.getElementById('closeNotif');
 
   function closeAllDrawers() {
     sidebar.classList.remove('open');
-    notifDrawer.classList.remove('open');
+    if (notifDrawer) notifDrawer.classList.remove('open');
     overlay.classList.remove('open');
   }
 
@@ -35,17 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
   if (closeNotif) closeNotif.addEventListener('click', closeAllDrawers);
   if (overlay) overlay.addEventListener('click', closeAllDrawers);
 
-  // Tab View Switching
+  // Tab Switching Logic
   navItems.forEach(item => {
     item.addEventListener('click', () => {
       const tab = item.getAttribute('data-tab');
-
       navItems.forEach(i => i.classList.remove('active'));
       tabContents.forEach(c => c.classList.remove('active'));
 
       item.classList.add('active');
       document.getElementById(tab).classList.add('active');
-
       closeAllDrawers();
 
       if (tab === 'network-radar') {
@@ -58,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Multi-Horizon Selector Buttons
+  // Multi-Horizon Buttons
   const tBtns = document.querySelectorAll('.t-btn');
   tBtns.forEach(b => {
     b.addEventListener('click', () => {
@@ -75,45 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
     populateNotifications();
   }
 
-  // Populate Auto Action Log Table
-  function populateActionLog() {
-    const tbody = document.getElementById('autoActionTable');
-    if (!tbody) return;
-
-    const logs = [
-      { time: 'Now', target: 'Auth-Gateway (Delhi)', action: 'Firewall BGP Blackhole', status: 'EXECUTED', class: 'text-green' },
-      { time: '-2m', target: 'DB-Cluster (Tokyo)', action: 'Rate Limit (100 req/s)', status: 'ACTIVE', class: 'text-accent' },
-      { time: '-15m', target: 'API-Edge (Dallas)', action: 'SYN Cookie Challenge', status: 'MITIGATED', class: 'text-green' }
-    ];
-
-    tbody.innerHTML = '';
-    logs.forEach(l => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${l.time}</td><td>${l.target}</td><td>${l.action}</td><td class="${l.class}">${l.status}</td>`;
-      tbody.appendChild(tr);
-    });
+  // Theme Dynamic Helpers for Canvas
+  function getCanvasBg() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? '#121826' : '#ffffff';
   }
 
-  // Populate Notifications Drawer
-  function populateNotifications() {
-    const notifList = document.getElementById('notifList');
-    if (!notifList) return;
-
-    const notifs = [
-      '🚨 <strong>CRITICAL:</strong> High SYN-Flood anomaly detected in Delhi Node.',
-      '🛡️ <strong>AUTO-MITIGATION:</strong> BGP Drop triggered on 103.21.244.12.',
-      '🤖 <strong>GNN ENGINE:</strong> Neighbor node risk propagation score elevated to 88%.'
-    ];
-
-    notifList.innerHTML = '';
-    notifs.forEach(n => {
-      const li = document.createElement('li');
-      li.innerHTML = n;
-      notifList.appendChild(li);
-    });
+  function getGridColor() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#e2e8f0';
   }
 
-  // Real-Time Traffic vs Forecast Canvas Chart (Light Mode)
+  function getTextColor() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? '#94a3b8' : '#475569';
+  }
+
+  // Traffic Chart Canvas Render
   function drawTrafficChart() {
     const canvas = document.getElementById('miniChart');
     if (!canvas) return;
@@ -126,12 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const paddingLeft = 30, paddingBottom = 20;
     const chartW = w - paddingLeft - 10, chartH = h - paddingBottom - 20;
 
-    // Clear with White Canvas Background
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = getCanvasBg();
     ctx.fillRect(0, 0, w, h);
 
-    // Light Mode Grid Lines
-    ctx.strokeStyle = '#e2e8f0';
+    ctx.strokeStyle = getGridColor();
     ctx.lineWidth = 1;
     for (let y = 0.2; y <= 1.0; y += 0.2) {
       const yPos = 10 + chartH * y;
@@ -146,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.lineTo(paddingLeft + chartW * 0.95, 10 + chartH * 0.75);
     ctx.stroke();
 
-    // Actual Traffic Line
+    // Actual Traffic
     ctx.setLineDash([]);
     ctx.strokeStyle = '#2563eb';
     ctx.lineWidth = 2;
@@ -156,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.lineTo(paddingLeft + chartW * 0.5, 10 + chartH * 0.35);
     ctx.stroke();
 
-    // Forecast Vector Line
+    // Forecast
     ctx.strokeStyle = '#dc2626';
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
@@ -166,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.setLineDash([]);
   }
 
-  // Network Topology Graph (GNN Engine)
+  // GNN Topology Canvas Render
   function renderGNNTopology() {
     const canvas = document.getElementById('gnnTopologyCanvas');
     if (!canvas) return;
@@ -176,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = canvas.parentElement.clientHeight || 160;
 
     const w = canvas.width, h = canvas.height;
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = getCanvasBg();
     ctx.fillRect(0, 0, w, h);
 
     const nodes = [
@@ -189,29 +182,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const edges = [[0, 1], [0, 3], [1, 2], [3, 4], [1, 4]];
 
-    ctx.strokeStyle = '#cbd5e1';
+    ctx.strokeStyle = getGridColor();
     ctx.lineWidth = 1.5;
     edges.forEach(e => {
       const n1 = nodes[e[0]], n2 = nodes[e[1]];
-      ctx.beginPath();
-      ctx.moveTo(n1.x, n1.y);
-      ctx.lineTo(n2.x, n2.y);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
     });
 
     nodes.forEach(n => {
       ctx.fillStyle = n.status;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, 6, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#475569';
+      ctx.beginPath(); ctx.arc(n.x, n.y, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = getTextColor();
       ctx.font = '9px sans-serif';
       ctx.fillText(n.id, n.x + 8, n.y + 3);
     });
   }
 
-  // Targeted Locations Map Canvas
+  // Map Canvas Render
   function renderHackerMap() {
     const canvas = document.getElementById('locationMap');
     if (!canvas) return;
@@ -221,10 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.height = canvas.parentElement.clientHeight || 160;
 
     const w = canvas.width, h = canvas.height;
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = getCanvasBg();
     ctx.fillRect(0, 0, w, h);
 
-    ctx.strokeStyle = '#f1f5f9';
+    ctx.strokeStyle = getGridColor();
     for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
 
     const locs = [
@@ -235,11 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
     locs.forEach(l => {
       ctx.fillStyle = l.color;
       ctx.beginPath(); ctx.arc(l.x, l.y, 5, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#475569'; ctx.font = '9px sans-serif'; ctx.fillText(l.name, l.x + 8, l.y + 3);
+      ctx.fillStyle = getTextColor();
+      ctx.font = '9px sans-serif';
+      ctx.fillText(l.name, l.x + 8, l.y + 3);
     });
   }
 
-  // Live Threat Sweep Canvas
+  // Live Radar Sweep Animation
   let rAngle = 0;
   function renderRadar() {
     const canvas = document.getElementById('radarCanvas');
@@ -252,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const w = canvas.width, h = canvas.height, r = Math.min(w, h) / 2 - 10;
     const cx = w / 2, cy = h / 2;
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = getCanvasBg();
     ctx.fillRect(0, 0, w, h);
 
     ctx.strokeStyle = '#05966933';
@@ -269,7 +258,39 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(renderRadar);
   }
 
-  // Initial Load Trigger
+  function populateActionLog() {
+    const tbody = document.getElementById('autoActionTable');
+    if (!tbody) return;
+    const logs = [
+      { time: 'Now', target: 'Auth-Gateway (Delhi)', action: 'Firewall BGP Blackhole', status: 'EXECUTED', class: 'text-green' },
+      { time: '-2m', target: 'DB-Cluster (Tokyo)', action: 'Rate Limit (100 req/s)', status: 'ACTIVE', class: 'text-accent' },
+      { time: '-15m', target: 'API-Edge (Dallas)', action: 'SYN Cookie Challenge', status: 'MITIGATED', class: 'text-green' }
+    ];
+    tbody.innerHTML = '';
+    logs.forEach(l => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${l.time}</td><td>${l.target}</td><td>${l.action}</td><td class="${l.class}">${l.status}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function populateNotifications() {
+    const notifList = document.getElementById('notifList');
+    if (!notifList) return;
+    const notifs = [
+      '🚨 <strong>CRITICAL:</strong> High SYN-Flood anomaly detected in Delhi Node.',
+      '🛡️ <strong>AUTO-MITIGATION:</strong> BGP Drop triggered on 103.21.244.12.',
+      '🤖 <strong>GNN ENGINE:</strong> Neighbor node risk propagation score elevated to 88%.'
+    ];
+    notifList.innerHTML = '';
+    notifs.forEach(n => {
+      const li = document.createElement('li');
+      li.innerHTML = n;
+      notifList.appendChild(li);
+    });
+  }
+
+  // Initial Run
   renderDashboardComponents();
   window.addEventListener('resize', renderDashboardComponents);
 });
