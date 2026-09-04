@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astra-Forecast Frontend Dashboard</title>
+    <!-- Tailwind CSS Script CDN for Responsive Styling -->
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        @import url('https://googleapis.com');
+        body { font-family: 'Space Mono', monospace; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen bg-[#090D16] text-[#E2E8F0] p-4 md:p-8 select-none">
+
+    <!-- DASHBOARD BANNER HUD -->
+    <header class="border border-slate-800 bg-[#0F172A]/80 backdrop-blur p-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center relative">
+        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+        <div>
+            <div class="text-xs uppercase tracking-widest text-blue-400 font-bold flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                FRONTEND MONITOR: ACTIVE // UPLINK: SEC-ENG-INSTITUTE
+            </div>
+            <h1 class="text-2xl md:text-3xl font-black tracking-wider text-white mt-1 heading-font">
+                ASTRA-FORECAST <span class="text-xs font-normal border border-slate-700 text-slate-400 px-2 py-0.5 ml-2 bg-slate-900">PS ID: SIH26153</span>
+            </h1>
+        </div>
+        <div class="mt-4 md:mt-0 border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6">
+            <div class="text-xs text-slate-500 font-bold">SPONSOR INTERFACE AREA</div>
+            <div class="text-sm font-bold text-slate-200">National Technical Research Organisation (NTRO)</div>
+        </div>
+    </header>
+
+    <!-- LIVE REAL-TIME ALERT STRIP -->
+    <section class="mb-6">
+        <div id="alert-banner" class="border border-slate-800 bg-slate-900/20 p-4 text-sm text-slate-400 font-bold border-l-4 border-l-blue-500 transition-all duration-300">
+            [+] Network interface trace initialized. Scanning packet telemetry metrics...
+        </div>
+    </section>
+
+    <!-- TRIPLE WORKFLOW GRID MODULE -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- PROCESSING ARCHITECTURE FEED -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-[#0F172A]/40 border border-slate-800 p-5">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+                    <h2 class="text-sm font-black text-slate-300 uppercase tracking-widest">// MODEL PIPELINE LOG ANALYSIS</h2>
+                    <span id="engine-status" class="text-xs px-2 py-0.5 bg-blue-950/50 text-blue-400 border border-blue-900 font-bold">TRI_ENGINE_PARALLEL_SCAN</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-blue-400 font-bold">01. LSTM/GRU</span><p class="text-slate-400 mt-1">Temporal Sequence</p></div>
+                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-emerald-400 font-bold">02. RANDOM FOREST</span><p class="text-slate-400 mt-1">Feature Sorting</p></div>
+                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-purple-400 font-bold">03. GNN</span><p class="text-slate-400 mt-1">Topology Network</p></div>
+                </div>
+            </div>
+
+            <!-- LOG CAPTURE SHELL TERMINAL -->
+            <div class="bg-[#090D16] border border-slate-800 p-4">
+                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-2 mb-3">// CONSOLE EVENT STREAM</h2>
+                <div id="console-logs" class="space-y-1.5 h-44 overflow-y-auto text-xs text-slate-400 font-mono">
+                    <!-- Dynamic logs stream insertion pointer -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PERFORMANCE INDICATORS METRIC SHEET -->
+        <div class="space-y-6">
+            <div class="bg-[#0F172A]/90 p-5 border border-slate-800 space-y-4">
+                <div class="flex justify-between border-b border-slate-800 pb-2"><span>Precision Accuracy</span><span class="text-emerald-400 font-bold">87%</span></div>
+                <div class="flex justify-between border-b border-slate-800 pb-2"><span>Warning Horizon</span><span class="text-blue-400 font-bold">30 MIN</span></div>
+                <div class="flex justify-between"><span>Compute Latency</span><span id="latency-val" class="text-amber-400 font-bold">&lt; 1.8s</span></div>
+            </div>
+            
+            <!-- ACTIVE MITIGATION SIMULATOR BUTTON -->
+            <button id="failover-btn" class="w-full bg-blue-900/40 hover:bg-blue-900/60 text-blue-400 border border-blue-800 font-bold text-xs py-3 px-4 uppercase tracking-wider transition-all">
+                Trigger System Failover Protocol
+            </button>
+        </div>
+    </div>
+
+    <!-- Embedded Native Logic Component -->
+    <script>
+        const logsContainer = document.getElementById('console-logs');
+        const alertBanner = document.getElementById('alert-banner');
+        const engineStatus = document.getElementById('engine-status');
+        const latencyVal = document.getElementById('latency-val');
+        const failoverBtn = document.getElementById('failover-btn');
+
+        let transactionIndex = 0;
+        let isFailoverActive = false;
+        const attackVectors = ["DDoS-LOIC-Trajectory", "BruteForce-SSH-Inbound", "Botnet-Mirai-Footprint", "PortScan-Aggressive"];
+
+        function createLogEntry(messageText) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logRow = document.createElement('div');
+            logRow.innerHTML = `<span class="text-slate-600">[${timestamp}]</span> ${messageText}`;
+            logsContainer.insertBefore(logRow, logsContainer.firstChild);
+            
+            if (logsContainer.children.length > 8) {
+                logsContainer.removeChild(logsContainer.lastChild);
+            }
+        }
+
+        // Live runtime loop matching presentation slides behavior models
+        setInterval(() => {
+            transactionIndex++;
+            const computedTime = (0.11 + Math.random() * 0.31).toFixed(3);
+            latencyVal.textContent = `${computedTime}s`;
+
+            const triggerThreatState = (transactionIndex % 6 === 0) && !isFailoverActive;
+
+            if (triggerThreatState) {
+                const structuralAttack = attackVectors[Math.floor(Math.random() * attackVectors.length)];
+                engineStatus.textContent = "ASYNC_FUSION_TRIGGERED";
+                engineStatus.className = "text-xs px-2 py-0.5 bg-orange-950/50 text-orange-400 border border-orange-900 font-bold";
+                
+                alertBanner.className = "border border-orange-500/30 bg-orange-950/20 p-4 flex items-center border-l-4 border-l-orange-500 animate-pulse text-orange-200 text-sm font-bold";
+                alertBanner.innerHTML = `[ALERT] ${structuralAttack} mapped over ingress pathways. Strike predicted in 22 mins | Confidence: 87%`;
+                
+                createLogEntry(`[CRITICAL] AI Fusion Cluster matched structural packet fluctuations. SHAP parameters: DestinationPort(+0.38), BwdPacketLengthStd(+0.24).`);
+            } else {
+                engineStatus.textContent = isFailoverActive ? "SINGLE_MODEL_FALLBACK" : "TRI_ENGINE_PARALLEL_SCAN";
+                engineStatus.className = isFailoverActive 
+                    ? "text-xs px-2 py-0.5 bg-amber-950/50 text-amber-400 border border-amber-900 font-bold"
+                    : "text-xs px-2 py-0.5 bg-blue-950/50 text-blue-400 border border-blue-900 font-bold";
+                
+                if (!isFailoverActive) {
+                    alertBanner.className = "border border-slate-800 bg-slate-900/20 p-4 text-sm text-slate-400 font-bold border-l-4 border-l-blue-500";
+                    alertBanner.textContent = "[+] Evaluation scanner tracking network metrics parameters...";
+                }
+
+                const monitoredPort = Math.floor(Math.random() * 423) + 20;
+                const trafficPayloadBytes = Math.floor(Math.random() * 1416) + 64;
+                const operationalModeLabel = isFailoverActive ? 'FALLBACK' : 'TRI_ENGINE_PARALLEL';
+                createLogEntry(`[${operationalModeLabel}] Audited packet slice sequence from index layer. Target Port: ${monitoredPort} | Size: ${trafficPayloadBytes} bytes | Vector state: SECURE.`);
+            }
+        }, 1500);
+
+        // Failover click event listener simulation mapping 
+        failoverBtn.addEventListener('click', () => {
+            isFailoverActive = true;
+            engineStatus.textContent = "SINGLE_MODEL_FALLBACK";
+            
+            alertBanner.className = "border border-amber-500/30 bg-amber-950/20 p-4 flex items-center border-l-4 border-l-amber-500 text-amber-200 text-sm font-bold";
+            alertBanner.textContent = "[!] Ensemble Fallback Protocol Activated. System locked on standalone weights configurations.";
+            
+            createLogEntry("[SYSTEM] Emergency operational failover deployed. Shifted processing thread allocation successfully.");
+            alert("Protocol Acknowledged: Fallback configuration mode engaged successfully on standalone files.");
+        });
+    </script>
+</body>
+</html>
