@@ -9,7 +9,6 @@
   <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 
   <style>
-    /* CSS Variables for Black & White (Dark & Light) Themes */
     :root {
       --bg-color: #080808;
       --card-bg: #121212;
@@ -38,153 +37,36 @@
       --box-bg: #e4e4e7;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s ease, color 0.3s ease; min-height: 100vh; }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s ease, color 0.3s ease;
-      min-height: 100vh;
-    }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--card-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .icon-btn { background: none; border: none; color: var(--text-color); font-size: 20px; cursor: pointer; }
+    .app-title { font-weight: 700; font-size: 16px; letter-spacing: 1px; }
+    .app-title span { color: var(--accent-blue); }
+    .header-icons { display: flex; align-items: center; gap: 12px; }
 
-    /* Top Navigation Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      background-color: var(--card-bg);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    .bell-wrapper { position: relative; cursor: pointer; }
+    .bell-badge { position: absolute; top: -6px; right: -6px; background-color: var(--accent-red); color: #fff; font-size: 10px; font-weight: bold; border-radius: 50%; padding: 2px 5px; }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .sidebar { position: fixed; top: 0; left: -260px; width: 250px; height: 100%; background-color: var(--card-bg); border-right: 1px solid var(--border-color); transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; padding-top: 20px; }
+    .sidebar.open { left: 0; }
+    .sidebar-header { font-size: 18px; font-weight: 700; color: var(--accent-blue); padding: 0 20px 20px 20px; border-bottom: 1px solid var(--border-color); }
+    .nav-list { list-style: none; margin-top: 10px; }
+    .nav-link { display: block; padding: 14px 20px; color: var(--subtext-color); text-decoration: none; font-size: 14px; font-weight: 500; border-bottom: 1px solid var(--border-color); transition: all 0.2s ease; }
+    .nav-link:hover, .nav-link.active { color: var(--accent-blue); background-color: var(--box-bg); }
 
-    .icon-btn {
-      background: none;
-      border: none;
-      color: var(--text-color);
-      font-size: 20px;
-      cursor: pointer;
-    }
+    .overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); display: none; z-index: 999; }
+    .overlay.active { display: block; }
 
-    .app-title {
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 1px;
-    }
+    main { padding: 16px; max-width: 1100px; margin: 0 auto; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .app-title span {
-      color: var(--accent-blue);
-    }
-
-    .header-icons {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    /* Sliding Navigation Drawer */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -260px;
-      width: 250px;
-      height: 100%;
-      background-color: var(--card-bg);
-      border-right: 1px solid var(--border-color);
-      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 1000;
-      padding-top: 20px;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar-header {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent-blue);
-      padding: 0 20px 20px 20px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .nav-list {
-      list-style: none;
-      margin-top: 10px;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 14px 20px;
-      color: var(--subtext-color);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      border-bottom: 1px solid var(--border-color);
-      transition: all 0.2s ease;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      color: var(--accent-blue);
-      background-color: var(--box-bg);
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 999;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
-    /* Main Container & Tab Views */
-    main {
-      padding: 16px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Horizontal Control Bar */
-    .horizon-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .horizon-label {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
+    .horizon-container { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .horizon-label { font-weight: 700; font-size: 14px; }
+    
     .horizon-btn {
       background-color: var(--button-bg);
       border: 1px solid var(--border-color);
@@ -193,179 +75,46 @@
       border-radius: 6px;
       font-size: 12px;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
     .horizon-btn.active {
       background-color: var(--accent-blue);
       color: #ffffff;
       border-color: var(--accent-blue);
+      font-weight: bold;
     }
 
-    /* Layout Grids */
-    .grid-2x2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+    .grid-4x1 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 768px) { .grid-4x1 { grid-template-columns: repeat(2, 1fr); } }
 
-    .grid-4x1 {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    @media (max-width: 768px) {
-      .grid-4x1 { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 12px;
-    }
-
-    .card-title {
-      font-size: 11px;
-      color: var(--subtext-color);
-      margin-bottom: 6px;
-    }
-
-    .card-value {
-      font-size: 16px;
-      font-weight: 700;
-    }
-
+    .card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+    .card-title { font-size: 11px; color: var(--subtext-color); margin-bottom: 6px; }
+    .card-value { font-size: 16px; font-weight: 700; }
     .val-critical { color: var(--accent-red); }
     .val-success { color: var(--accent-green); }
+    .tag-red { display: inline-block; border: 1px solid var(--accent-red); color: var(--accent-red); font-size: 11px; padding: 2px 6px; border-radius: 4px; margin-top: 4px; }
 
-    .tag-red {
-      display: inline-block;
-      border: 1px solid var(--accent-red);
-      color: var(--accent-red);
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-top: 4px;
-    }
+    .panel { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; margin-bottom: 16px; }
+    .panel-header { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; color: var(--subtext-color); margin-bottom: 12px; }
 
-    .panel {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
+    .pipeline-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+    .pipeline-box { background-color: var(--box-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 8px 4px; }
+    .pipeline-box .name { font-size: 11px; color: var(--text-color); }
+    .pipeline-box .status { font-size: 10px; color: var(--accent-green); font-weight: 700; margin-top: 4px; }
 
-    .panel-header {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: var(--subtext-color);
-      margin-bottom: 12px;
-    }
+    .shap-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 11px; }
+    .shap-label { width: 35%; color: var(--text-color); }
+    .shap-bar-bg { width: 50%; height: 8px; background-color: var(--box-bg); border-radius: 4px; overflow: hidden; }
+    .shap-bar-fill { height: 100%; border-radius: 4px; }
+    .shap-val { width: 15%; text-align: right; font-weight: 700; }
 
-    .pipeline-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      text-align: center;
-    }
+    #topology-graph { height: 250px; width: 100%; background: var(--box-bg); border-radius: 6px; border: 1px solid var(--border-color); }
+    .radar-container { display: flex; justify-content: center; align-items: center; padding: 10px; }
+    #radarCanvas { background-color: var(--box-bg); border-radius: 50%; border: 1px solid var(--border-color); }
 
-    .pipeline-box {
-      background-color: var(--box-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 8px 4px;
-    }
-
-    .pipeline-box .name {
-      font-size: 11px;
-      color: var(--text-color);
-    }
-
-    .pipeline-box .status {
-      font-size: 10px;
-      color: var(--accent-green);
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    /* SHAP Feature Attribution Bars */
-    .shap-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 11px;
-    }
-
-    .shap-label {
-      width: 35%;
-      color: var(--text-color);
-    }
-
-    .shap-bar-bg {
-      width: 50%;
-      height: 8px;
-      background-color: var(--box-bg);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .shap-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-    }
-
-    .shap-val {
-      width: 15%;
-      text-align: right;
-      font-weight: 700;
-    }
-
-    /* Containers for Network & Radar Elements */
-    #topology-graph {
-      height: 250px;
-      width: 100%;
-      background: var(--box-bg);
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-    }
-
-    .radar-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px;
-    }
-
-    #radarCanvas {
-      background-color: var(--box-bg);
-      border-radius: 50%;
-      border: 1px solid var(--border-color);
-    }
-
-    /* Console Style Log Output */
-    .log-terminal {
-      max-height: 140px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .log-item {
-      padding: 6px 10px;
-      border-radius: 4px;
-      background-color: var(--box-bg);
-      border-left: 3px solid var(--accent-blue);
-    }
-
+    .log-terminal { max-height: 140px; overflow-y: auto; font-family: monospace; font-size: 11px; display: flex; flex-direction: column; gap: 6px; }
+    .log-item { padding: 6px 10px; border-radius: 4px; background-color: var(--box-bg); border-left: 3px solid var(--accent-blue); }
     .log-item.alert { border-left-color: var(--accent-red); }
     .log-item.action { border-left-color: var(--accent-green); }
   </style>
@@ -379,7 +128,9 @@
     </div>
     <div class="header-icons">
       <button class="icon-btn" id="themeToggle" title="Toggle Light/Dark Mode">☀️</button>
-      <div style="cursor: pointer;">🔔</div>
+      <div class="bell-wrapper" onclick="switchTab(null, 'settings')">
+        🔔<span class="bell-badge">3</span>
+      </div>
     </div>
   </header>
 
@@ -397,13 +148,12 @@
 
   <main>
     <section id="dashboard" class="tab-content active">
-      
       <div class="horizon-container">
         <span class="horizon-label">1. Forecast Window:</span>
-        <button class="horizon-btn active">15m</button>
-        <button class="horizon-btn">30m</button>
-        <button class="horizon-btn">1h</button>
-        <button class="horizon-btn">24h</button>
+        <button class="horizon-btn active" data-window="15m">15m</button>
+        <button class="horizon-btn" data-window="30m">30m</button>
+        <button class="horizon-btn" data-window="1h">1h</button>
+        <button class="horizon-btn" data-window="24h">24h</button>
       </div>
 
       <div class="grid-4x1">
@@ -413,11 +163,11 @@
         </div>
         <div class="card">
           <div class="card-title">5. AI Confidence</div>
-          <div class="card-value val-success">94.8%</div>
+          <div class="card-value val-success" id="confidenceValue">94.8%</div>
         </div>
         <div class="card">
           <div class="card-title">Traffic Baseline</div>
-          <div class="card-value">4.2k r/s</div>
+          <div class="card-value" id="baselineValue">4.2k r/s</div>
         </div>
         <div class="card">
           <div class="card-title">6. Attack Type</div>
@@ -480,7 +230,6 @@
     </section>
 
     <section id="network-radar" class="tab-content">
-      
       <div class="panel">
         <div class="panel-header">LIVE RADAR PACKET MONITORING</div>
         <div class="radar-container">
@@ -533,7 +282,6 @@
   </main>
 
   <script>
-    // Navigation Drawer Logic
     const menuToggle = document.getElementById('menuToggle');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('overlay');
@@ -547,7 +295,6 @@
     menuToggle.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
 
-    // Tab Switching Logic
     function switchTab(event, targetId) {
       if (event) event.preventDefault();
 
@@ -577,7 +324,6 @@
       window.dispatchEvent(new Event('resize'));
     }
 
-    // Theme Switcher Logic
     themeToggle.addEventListener('click', () => {
       const currentTheme = document.body.getAttribute('data-theme');
       if (currentTheme === 'light') {
@@ -587,10 +333,10 @@
         document.body.setAttribute('data-theme', 'light');
         themeToggle.textContent = '🌙';
       }
-      renderRadar(); // Redraw radar canvas colors
+      renderRadar();
     });
 
-    // Panel 7: Interactive Chart.js Initialization
+    // Chart.js Setup
     const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
     const trafficChart = new Chart(ctxTraffic, {
       type: 'line',
@@ -625,7 +371,36 @@
       }
     });
 
-    // Panel 4: Vis.js Network Topology Graph
+    // FORECAST BUTTON SWITCHING LOGIC WITH DYNAMIC DATA
+    const windowDatasets = {
+      '15m': { labels: ['00:00', '00:03', '00:06', '00:09', '00:12', '00:15'], real: [1200, 1350, 1250, 2900, 4200, 5100], baseline: [1100, 1200, 1250, 1300, 1280, 1320], confidence: '94.8%', traffic: '4.2k r/s' },
+      '30m': { labels: ['00:00', '00:06', '00:12', '00:18', '00:24', '00:30'], real: [1100, 1250, 2900, 4100, 4800, 5300], baseline: [1150, 1210, 1260, 1290, 1310, 1330], confidence: '96.2%', traffic: '4.5k r/s' },
+      '1h':  { labels: ['00:00', '00:12', '00:24', '00:36', '00:48', '01:00'], real: [1000, 1500, 3800, 4900, 5200, 5000], baseline: [1100, 1200, 1280, 1300, 1320, 1350], confidence: '97.1%', traffic: '4.8k r/s' },
+      '24h': { labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'], real: [800, 950, 2100, 4500, 6100, 4200], baseline: [1000, 1050, 1200, 1350, 1300, 1250], confidence: '98.5%', traffic: '5.1k r/s' }
+    };
+
+    const horizonButtons = document.querySelectorAll('.horizon-btn');
+    horizonButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        horizonButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const windowKey = button.getAttribute('data-window');
+        const dataConfig = windowDatasets[windowKey];
+
+        if (dataConfig) {
+          trafficChart.data.labels = dataConfig.labels;
+          trafficChart.data.datasets[0].data = dataConfig.real;
+          trafficChart.data.datasets[1].data = dataConfig.baseline;
+          trafficChart.update();
+
+          document.getElementById('confidenceValue').textContent = dataConfig.confidence;
+          document.getElementById('baselineValue').textContent = dataConfig.traffic;
+        }
+      });
+    });
+
+    // Vis.js Graph Setup
     const graphContainer = document.getElementById('topology-graph');
     const nodes = new vis.DataSet([
       { id: 1, label: 'Gateway', color: '#3b82f6' },
@@ -638,12 +413,9 @@
       { from: 1, to: 3 },
       { from: 4, to: 1, color: { color: '#ef4444' }, width: 2 }
     ]);
-    const network = new vis.Network(graphContainer, { nodes, edges }, {
-      physics: { enabled: true },
-      nodes: { font: { color: '#ffffff', size: 11 } }
-    });
+    new vis.Network(graphContainer, { nodes, edges }, { physics: { enabled: true }, nodes: { font: { color: '#ffffff', size: 11 } } });
 
-    // Radar Canvas Animation
+    // Radar Loop
     const radarCanvas = document.getElementById('radarCanvas');
     const rCtx = radarCanvas.getContext('2d');
     let angle = 0;
@@ -654,8 +426,6 @@
       const radius = width / 2;
 
       rCtx.clearRect(0, 0, width, height);
-
-      // Radar Grid Concentric Circles
       rCtx.strokeStyle = 'rgba(59, 130, 246, 0.3)';
       rCtx.lineWidth = 1;
       for (let r = 30; r < radius; r += 30) {
@@ -664,18 +434,13 @@
         rCtx.stroke();
       }
 
-      // Sweeping Radar Line
       rCtx.beginPath();
       rCtx.moveTo(radius, radius);
-      rCtx.lineTo(
-        radius + radius * Math.cos(angle),
-        radius + radius * Math.sin(angle)
-      );
+      rCtx.lineTo(radius + radius * Math.cos(angle), radius + radius * Math.sin(angle));
       rCtx.strokeStyle = '#3b82f6';
       rCtx.lineWidth = 2;
       rCtx.stroke();
 
-      // Simulated Target Dot
       rCtx.fillStyle = '#ef4444';
       rCtx.beginPath();
       rCtx.arc(radius + 40, radius - 30, 4, 0, Math.PI * 2);
