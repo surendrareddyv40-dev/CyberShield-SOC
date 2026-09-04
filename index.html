@@ -3,152 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astra-Forecast Frontend Dashboard</title>
-    <!-- Tailwind CSS Script CDN for Responsive Styling -->
+    <title>ASTRA-FORECAST // Advanced Premium Cyber SOC</title>
+    <!-- Tailwind CSS Engine -->
     <script src="https://tailwindcss.com"></script>
+    <!-- Premium Fonts for Cyber Aesthetics -->
+    <link href="https://googleapis.com" rel="stylesheet">
     <style>
-        @import url('https://googleapis.com');
-        body { font-family: 'Space Mono', monospace; }
-        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: linear-gradient(135deg, #0B0F19 0%, #111827 40%, #1E1B4B 100%);
+        }
+        .mono-font { font-family: 'Space Mono', monospace; }
+        
+        /* Premium Colorful Glow Effects */
+        .glass-card-blue {
+            background: rgba(15, 23, 42, 0.65);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 15px rgba(56, 189, 248, 0.1);
+        }
+        .glass-card-purple {
+            background: rgba(24, 24, 37, 0.7);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), 0 0 15px rgba(168, 85, 247, 0.1);
+        }
+        .glass-card-danger {
+            background: rgba(30, 10, 10, 0.85);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+            box-shadow: 0 8px 32px 0 rgba(239, 68, 68, 0.15), 0 0 25px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Webkit log scrollbar styling */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.35); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+        .pulsing-ring { animation: pulse-ring 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite; }
     </style>
 </head>
-<body class="min-h-screen bg-[#090D16] text-[#E2E8F0] p-4 md:p-8 select-none">
+<body class="min-h-screen text-slate-100 p-4 md:p-6 select-none relative pb-12">
 
-    <!-- DASHBOARD BANNER HUD -->
-    <header class="border border-slate-800 bg-[#0F172A]/80 backdrop-blur p-4 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center relative">
-        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+    <!-- TOP PREMIUM GRADIENT CYBER HEADER -->
+    <header id="main-header" class="border border-sky-500/30 bg-slate-900/70 backdrop-blur-xl p-5 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center rounded-2xl shadow-[0_4px_20px_rgba(14,165,233,0.15)] transition-all duration-300">
         <div>
-            <div class="text-xs uppercase tracking-widest text-blue-400 font-bold flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                FRONTEND MONITOR: ACTIVE // UPLINK: SEC-ENG-INSTITUTE
+            <div class="text-[11px] uppercase tracking-widest text-sky-400 font-extrabold flex items-center gap-2">
+                <span id="header-status-ping" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10B981]"></span>
+                <span id="header-sub-text">PREDICTIVE SECURITY MATRIX ENABLED // SYSTEM LOG: STEADY</span>
             </div>
-            <h1 class="text-2xl md:text-3xl font-black tracking-wider text-white mt-1 heading-font">
-                ASTRA-FORECAST <span class="text-xs font-normal border border-slate-700 text-slate-400 px-2 py-0.5 ml-2 bg-slate-900">PS ID: SIH26153</span>
+            <h1 class="text-2xl md:text-3xl font-black tracking-tight text-white mt-1">
+                ASTRA-FORECAST <span class="text-xs font-bold border border-sky-500/30 text-sky-300 px-2 py-0.5 ml-2 bg-sky-950/40 rounded-md">PS ID: SIH26153</span>
             </h1>
         </div>
-        <div class="mt-4 md:mt-0 border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6">
-            <div class="text-xs text-slate-500 font-bold">SPONSOR INTERFACE AREA</div>
-            <div class="text-sm font-bold text-slate-200">National Technical Research Organisation (NTRO)</div>
+        <div class="mt-4 md:mt-0 text-left md:text-right border-t md:border-t-0 md:border-l border-slate-800/80 pt-3 md:pt-0 md:pl-6">
+            <div class="text-[10px] text-slate-400 font-extrabold tracking-wider uppercase">Sponsoring Body</div>
+            <div class="text-sm font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-violet-400 tracking-wide">National Technical Research Organisation (NTRO)</div>
         </div>
     </header>
 
-    <!-- LIVE REAL-TIME ALERT STRIP -->
-    <section class="mb-6">
-        <div id="alert-banner" class="border border-slate-800 bg-slate-900/20 p-4 text-sm text-slate-400 font-bold border-l-4 border-l-blue-500 transition-all duration-300">
-            [+] Network interface trace initialized. Scanning packet telemetry metrics...
-        </div>
-    </section>
-
-    <!-- TRIPLE WORKFLOW GRID MODULE -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- TRIPLE WORKFLOW SECTIONS LAYOUT -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
-        <!-- PROCESSING ARCHITECTURE FEED -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-[#0F172A]/40 border border-slate-800 p-5">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-                    <h2 class="text-sm font-black text-slate-300 uppercase tracking-widest">// MODEL PIPELINE LOG ANALYSIS</h2>
-                    <span id="engine-status" class="text-xs px-2 py-0.5 bg-blue-950/50 text-blue-400 border border-blue-900 font-bold">TRI_ENGINE_PARALLEL_SCAN</span>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-blue-400 font-bold">01. LSTM/GRU</span><p class="text-slate-400 mt-1">Temporal Sequence</p></div>
-                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-emerald-400 font-bold">02. RANDOM FOREST</span><p class="text-slate-400 mt-1">Feature Sorting</p></div>
-                    <div class="border border-slate-800 p-3 bg-[#090D16]/90"><span class="text-purple-400 font-bold">03. GNN</span><p class="text-slate-400 mt-1">Topology Network</p></div>
-                </div>
-            </div>
-
-            <!-- LOG CAPTURE SHELL TERMINAL -->
-            <div class="bg-[#090D16] border border-slate-800 p-4">
-                <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-2 mb-3">// CONSOLE EVENT STREAM</h2>
-                <div id="console-logs" class="space-y-1.5 h-44 overflow-y-auto text-xs text-slate-400 font-mono">
-                    <!-- Dynamic logs stream insertion pointer -->
-                </div>
-            </div>
-        </div>
-
-        <!-- PERFORMANCE INDICATORS METRIC SHEET -->
+        <!-- SECTION 1: LIVE THREAT SCANNERS & TIMELINE MODEL FLOW -->
         <div class="space-y-6">
-            <div class="bg-[#0F172A]/90 p-5 border border-slate-800 space-y-4">
-                <div class="flex justify-between border-b border-slate-800 pb-2"><span>Precision Accuracy</span><span class="text-emerald-400 font-bold">87%</span></div>
-                <div class="flex justify-between border-b border-slate-800 pb-2"><span>Warning Horizon</span><span class="text-blue-400 font-bold">30 MIN</span></div>
-                <div class="flex justify-between"><span>Compute Latency</span><span id="latency-val" class="text-amber-400 font-bold">&lt; 1.8s</span></div>
+            <div class="text-xs font-black tracking-widest text-sky-400 uppercase flex items-center gap-2 px-1">
+                <span class="w-1.5 h-3 bg-sky-500 rounded-sm"></span> SEC_01 // INTELLIGENCE PIPELINE
             </div>
-            
-            <!-- ACTIVE MITIGATION SIMULATOR BUTTON -->
-            <button id="failover-btn" class="w-full bg-blue-900/40 hover:bg-blue-900/60 text-blue-400 border border-blue-800 font-bold text-xs py-3 px-4 uppercase tracking-wider transition-all">
-                Trigger System Failover Protocol
-            </button>
+
+            <!-- CORE AI MODEL CARDS CONTAINER -->
+            <div class="glass-card-blue p-5 rounded-2xl space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800/80 pb-3">
+                    <h2 class="text-xs font-black text-slate-300 uppercase tracking-wider">AI TRI-ENGINE SCHEMATICS</h2>
+                    <span id="engine-status-badge" class="text-[10px] px-2 py-0.5 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-md font-bold uppercase">PARALLEL_SCAN</span>
+                </div>
+                
+                <div class="space-y-3">
+                    <!-- MODEL 1 -->
+                    <div id="card-lstm" class="bg-slate-950/50 p-3.5 border border-slate-800/60 rounded-xl transition-all duration-300">
+                        <div class="text-[10px] font-bold text-sky-400 uppercase">01 // LSTM TEMPORAL ENGINE</div>
+                        <div class="text-xs font-bold text-white mt-0.5">Sequential Micropattern Extractor</div>
+                        <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden border border-slate-800"><div class="bg-gradient-to-r from-sky-500 to-indigo-500 h-full w-[85%] rounded-full"></div></div>
+                    </div>
+                    <!-- MODEL 2 -->
+                    <div id="card-rf" class="bg-slate-950/50 p-3.5 border border-slate-800/60 rounded-xl transition-all duration-300">
+                        <div class="text-[10px] font-bold text-emerald-400 uppercase">02 // RANDOM FOREST ARRAY</div>
+                        <div class="text-xs font-bold text-white mt-0.5">Signature Boundary Classifier</div>
+                        <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden border border-slate-800"><div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full w-[74%] rounded-full"></div></div>
+                    </div>
+                    <!-- MODEL 3 -->
+                    <div id="card-gnn" class="bg-slate-950/50 p-3.5 border border-slate-800/60 rounded-xl transition-all duration-300">
+                        <div class="text-[10px] font-bold text-purple-400 uppercase">03 // GRAPH NEURAL NETWORK</div>
+                        <div class="text-xs font-bold text-white mt-0.5">Topology Matrix Propagation Map</div>
+                        <div class="w-full bg-slate-900 h-1.5 rounded-full mt-2 overflow-hidden border border-slate-800"><div class="bg-gradient-to-r from-purple-500 to-pink-500 h-full w-[91%] rounded-full"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AUDIT METRICS LIST -->
+            <div class="glass-card-blue p-5 rounded-2xl space-y-3.5">
+                <h2 class="text-xs font-black text-slate-300 uppercase tracking-wider border-b border-slate-800/80 pb-2 mb-1">// TELEMETRY AUDIT</h2>
+                <div class="flex justify-between items-center text-sm border-b border-slate-800/40 pb-2.5">
+                    <span class="text-slate-400 text-xs font-semibold">Forecast Accuracy</span>
+                    <span class="text-emerald-400 font-extrabold text-sm tracking-wide">87.4% Real-time</span>
+                </div>
+                <div class="flex justify-between items-center text-sm border-b border-slate-800/40 pb-2.5">
+                    <span class="text-slate-400 text-xs font-semibold">Early Horizon Window</span>
+                    <span class="text-sky-400 font-extrabold text-sm tracking-wide">30 MINS PRE-STRIKE</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-400 text-xs font-semibold">Processing Pipeline Delay</span>
+                    <span id="latency-val" class="text-amber-400 font-extrabold text-sm tracking-wide">&lt; 0.124s</span>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <!-- Embedded Native Logic Component -->
-    <script>
-        const logsContainer = document.getElementById('console-logs');
-        const alertBanner = document.getElementById('alert-banner');
-        const engineStatus = document.getElementById('engine-status');
-        const latencyVal = document.getElementById('latency-val');
-        const failoverBtn = document.getElementById('failover-btn');
+        <!-- SECTION 2: THE INTERACTIVE UPCOMING ATTACK GEOLOCATION RADAR TRACKER -->
+        <div class="space-y-6">
+            <div class="text-xs font-black tracking-widest text-purple-400 uppercase flex items-center gap-2 px-1">
+                <span class="w-1.5 h-3 bg-purple-500 rounded-sm"></span> SEC_02 // UPCOMING STRIKES MATRIX
+            </div>
 
-        let transactionIndex = 0;
-        let isFailoverActive = false;
-        const attackVectors = ["DDoS-LOIC-Trajectory", "BruteForce-SSH-Inbound", "Botnet-Mirai-Footprint", "PortScan-Aggressive"];
+            <!-- INTERACTIVE ALERT HOUSING CARD -->
+            <div id="alert-card" class="glass-card-purple p-5 rounded-2xl flex flex-col items-center justify-center relative overflow-hidden min-h-[360px] text-center transition-all duration-300">
+                <!-- Inner Live Status Elements -->
+                <div id="radar-container" class="w-44 h-44 rounded-full border border-purple-500/20 relative flex items-center justify-center bg-slate-950/80 mb-5 shadow-inner">
+                    <div class="absolute w-32 h-32 rounded-full border border-purple-500/10"></div>
+                    <div class="absolute w-16 h-16 rounded-full border border-purple-500/5"></div>
+                    <div class="absolute w-full h-[1px] bg-purple-500/10"></div>
+                    <div class="absolute h-full w-[1px] bg-purple-500/10"></div>
+                    <!-- Sweep and Targets -->
+                    <div id="radar-sweep-line" class="absolute w-full h-full rounded-full bg-gradient-to-tr from-transparent via-transparent to-purple-500/20 radar-sweep pointer-events-none"></div>
+                    <div id="radar-blip" class="absolute w-3 h-3 rounded-full bg-emerald-400 top-14 left-12 opacity-90 shadow-[0_0_8px_#10B981]"></div>
+                </div>
 
-        function createLogEntry(messageText) {
-            const timestamp = new Date().toLocaleTimeString();
-            const logRow = document.createElement('div');
-            logRow.innerHTML = `<span class="text-slate-600">[${timestamp}]</span> ${messageText}`;
-            logsContainer.insertBefore(logRow, logsContainer.firstChild);
-            
-            if (logsContainer.children.length > 8) {
-                logsContainer.removeChild(logsContainer.lastChild);
-            }
-        }
-
-        // Live runtime loop matching presentation slides behavior models
-        setInterval(() => {
-            transactionIndex++;
-            const computedTime = (0.11 + Math.random() * 0.31).toFixed(3);
-            latencyVal.textContent = `${computedTime}s`;
-
-            const triggerThreatState = (transactionIndex % 6 === 0) && !isFailoverActive;
-
-            if (triggerThreatState) {
-                const structuralAttack = attackVectors[Math.floor(Math.random() * attackVectors.length)];
-                engineStatus.textContent = "ASYNC_FUSION_TRIGGERED";
-                engineStatus.className = "text-xs px-2 py-0.5 bg-orange-950/50 text-orange-400 border border-orange-900 font-bold";
-                
-                alertBanner.className = "border border-orange-500/30 bg-orange-950/20 p-4 flex items-center border-l-4 border-l-orange-500 animate-pulse text-orange-200 text-sm font-bold";
-                alertBanner.innerHTML = `[ALERT] ${structuralAttack} mapped over ingress pathways. Strike predicted in 22 mins | Confidence: 87%`;
-                
-                createLogEntry(`[CRITICAL] AI Fusion Cluster matched structural packet fluctuations. SHAP parameters: DestinationPort(+0.38), BwdPacketLengthStd(+0.24).`);
-            } else {
-                engineStatus.textContent = isFailoverActive ? "SINGLE_MODEL_FALLBACK" : "TRI_ENGINE_PARALLEL_SCAN";
-                engineStatus.className = isFailoverActive 
-                    ? "text-xs px-2 py-0.5 bg-amber-950/50 text-amber-400 border border-amber-900 font-bold"
-                    : "text-xs px-2 py-0.5 bg-blue-950/50 text-blue-400 border border-blue-900 font-bold";
-                
-                if (!isFailoverActive) {
-                    alertBanner.className = "border border-slate-800 bg-slate-900/20 p-4 text-sm text-slate-400 font-bold border-l-4 border-l-blue-500";
-                    alertBanner.textContent = "[+] Evaluation scanner tracking network metrics parameters...";
-                }
-
-                const monitoredPort = Math.floor(Math.random() * 423) + 20;
-                const trafficPayloadBytes = Math.floor(Math.random() * 1416) + 64;
-                const operationalModeLabel = isFailoverActive ? 'FALLBACK' : 'TRI_ENGINE_PARALLEL';
-                createLogEntry(`[${operationalModeLabel}] Audited packet slice sequence from index layer. Target Port: ${monitoredPort} | Size: ${trafficPayloadBytes} bytes | Vector state: SECURE.`);
-            }
-        }, 1500);
-
-        // Failover click event listener simulation mapping 
-        failoverBtn.addEventListener('click', () => {
-            isFailoverActive = true;
-            engineStatus.textContent = "SINGLE_MODEL_FALLBACK";
-            
-            alertBanner.className = "border border-amber-500/30 bg-amber-950/20 p-4 flex items-center border-l-4 border-l-amber-500 text-amber-200 text-sm font-bold";
-            alertBanner.textContent = "[!] Ensemble Fallback Protocol Activated. System locked on standalone weights configurations.";
-            
-            createLogEntry("[SYSTEM] Emergency operational failover deployed. Shifted processing thread allocation successfully.");
-            alert("Protocol Acknowledged: Fallback configuration mode engaged successfully on standalone files.");
-        });
-    </script>
-</body>
-</html>
+                <!-- Live Dynamic Details Injection Target -->
+                <div id="target-details-area" class="w-full space-y-1">
+                    <div class="flex justify-center mb-1"><span id="alert-badge" class="bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px] px-2.5 py-0.5 rounded-full font-extrabold uppercase tracking-widest">SCANNING AXIS</span></div>
