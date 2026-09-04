@@ -4,23 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ASTRA FORECAST RADAR</title>
-  <!-- Added ?v=3 to force mobile browsers to immediately clear cache and load cream theme -->
+  <!-- Cache-busting tag forces stylesheet refresh -->
   <link rel="stylesheet" href="style.css?v=3">
 </head>
-<body style="background-color: #fbf9f5;">
+<body>
 
-  <!-- Top Bar with Real-Time Alerts -->
+  <!-- Top Bar with Theme Toggle & Notifications -->
   <div class="topbar">
     <button class="menu-btn" id="menuBtn">☰</button>
     <div class="topbar-title">ASTRA <span>RADAR</span></div>
-    <div class="notification-badge" id="notifBtn">
-      🔔 <span class="badge-count" id="notifCount">3</span>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button class="theme-btn" id="themeToggle" title="Toggle Light/Dark Theme">🌙</button>
+      <div class="notification-badge" id="notifBtn">
+        🔔 <span class="badge-count" id="notifCount">3</span>
+      </div>
     </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- Notification Drawer (Feature 8) -->
+  <!-- Notification Drawer -->
   <div class="notif-drawer" id="notifDrawer">
     <div class="notif-header">
       <h4>Real-Time Alerts</h4>
@@ -52,7 +55,7 @@
     <!-- DASHBOARD VIEW -->
     <section id="dashboard" class="tab-content active">
 
-      <!-- FEATURE 1: Multi-Horizon Forecast Panel -->
+      <!-- Multi-Horizon Forecast Panel -->
       <div class="horizon-panel">
         <span class="lbl">Horizon Window:</span>
         <button class="t-btn active" data-time="15m">15m</button>
@@ -68,7 +71,6 @@
           <div class="val">CRITICAL</div>
         </div>
 
-        <!-- FEATURE 5: Confidence Score with Color Coding -->
         <div class="mini-card">
           <span class="lbl">AI Confidence</span>
           <div class="val conf-high" id="confScore">94.8%</div>
@@ -79,14 +81,13 @@
           <div class="val" id="trafVal">4.2k r/s</div>
         </div>
 
-        <!-- FEATURE 6: Attack Type Classification Badge -->
         <div class="mini-card">
           <span class="lbl">Attack Vector</span>
           <div class="badge-attack" id="attackBadge">SYN-FLOOD (DDoS)</div>
         </div>
       </div>
 
-      <!-- FEATURE 3: Three AI Engines Status Panel -->
+      <!-- AI Engines Status Panel -->
       <div class="card">
         <h4>Ensemble AI Engine Pipeline</h4>
         <div class="engine-grid">
@@ -105,7 +106,7 @@
         </div>
       </div>
 
-      <!-- FEATURE 2: SHAP Explainability Panel -->
+      <!-- SHAP Explainability Panel -->
       <div class="card">
         <h4>SHAP Feature Attribution (Explainability)</h4>
         <div class="shap-container">
@@ -132,7 +133,7 @@
         </div>
       </div>
 
-      <!-- FEATURE 7: Real-Time Traffic vs Predicted Traffic Chart -->
+      <!-- Real-Time Traffic vs Forecast Chart -->
       <div class="card">
         <h4>Real-Time Traffic vs Multi-Horizon Forecast</h4>
         <div class="chart-box">
@@ -140,7 +141,7 @@
         </div>
       </div>
 
-      <!-- Hacker Live Locations -->
+      <!-- Targeted Locations & Origins Map -->
       <div class="card">
         <h4>Targeted Locations & Origins</h4>
         <div class="map-box">
@@ -148,7 +149,7 @@
         </div>
       </div>
 
-      <!-- FEATURE 9: Auto-Response Action Log -->
+      <!-- Auto-Response Action Log -->
       <div class="card">
         <h4>Auto-Response Action Log</h4>
         <div class="tbl-box">
@@ -162,7 +163,7 @@
               </tr>
             </thead>
             <tbody id="autoActionTable">
-              <!-- JS Injected -->
+              <!-- Dynamically Populated -->
             </tbody>
           </table>
         </div>
@@ -172,7 +173,6 @@
 
     <!-- NETWORK RADAR VIEW -->
     <section id="network-radar" class="tab-content">
-      <!-- FEATURE 4: Network Topology Graph (Proves GNN) -->
       <div class="card">
         <h4>GNN Network Topology Mesh</h4>
         <div class="map-box">
@@ -222,6 +222,6 @@
 
   </main>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js"></script>
 </body>
 </html>
