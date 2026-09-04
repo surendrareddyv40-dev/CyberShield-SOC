@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ASTRA Mini Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <!-- ONLY THIS ONE CDN IS NEEDED -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -66,14 +67,14 @@
       <!-- Hacker Live Location Feed -->
       <div class="card">
         <h4>Targeted Locations & Origins</h4>
-        <div class="map-box">
+        <div class="map-box" id="mapBoxContainer">
           <canvas id="locationMap"></canvas>
         </div>
       </div>
 
       <div class="card">
         <h4>Traffic Forecast Chart</h4>
-        <div class="chart-box">
+        <div class="chart-box" id="chartBoxContainer">
           <canvas id="miniChart"></canvas>
         </div>
       </div>
@@ -145,6 +146,7 @@
 
   </main>
 
+  <!-- DONT USE ANY OTHER SCRIPT TAG HERE OR CHARTS FAIL -->
   <script src="script.js"></script>
 </body>
 </html>
