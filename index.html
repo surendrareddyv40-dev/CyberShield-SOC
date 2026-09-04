@@ -1,495 +1,675 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASTRA Radar</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ASTRA FORECAST RADAR</title>
   <style>
-    /* Global Reset & Dark Theme Styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* 1. LIGHT / CREAM THEME (DEFAULT) */
+    :root {
+      --bg-dark: #fbf9f5;
+      --bg-card: #ffffff;
+      --bg-sidebar: #f3efe6;
+      --border-col: #e2dacd;
+      --txt-main: #1e293b;
+      --txt-sub: #64748b;
+      --accent-blue: #2563eb;
+      --accent-red: #dc2626;
+      --accent-orange: #ea580c;
+      --accent-green: #059669;
+      --canvas-bg: #ffffff;
+      --grid-line: #e2e8f0;
     }
+
+    /* 2. DARK / CYBER THEME OVERRIDES */
+    [data-theme="dark"] {
+      --bg-dark: #0a0e17;
+      --bg-card: #121826;
+      --bg-sidebar: #0f1523;
+      --border-col: #1e293b;
+      --txt-main: #f8fafc;
+      --txt-sub: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-red: #ef4444;
+      --accent-orange: #f97316;
+      --accent-green: #10b981;
+      --canvas-bg: #121826;
+      --grid-line: #1e293b;
+    }
+
+    * { box-sizing: border-box; }
 
     body {
-      background-color: #080808;
-      color: #ffffff;
-      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--txt-main);
+      font-size: 12px;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
-    /* Top Navigation Header */
-    header {
+    /* Topbar */
+    .topbar {
+      height: 48px;
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border-col);
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 12px 16px;
-      background-color: #111111;
-      border-bottom: 1px solid #222222;
+      justify-content: space-between;
+      padding: 0 12px;
       position: sticky;
       top: 0;
       z-index: 100;
     }
 
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .menu-toggle {
+    .menu-btn {
       background: none;
       border: none;
-      color: #ffffff;
-      font-size: 22px;
+      color: var(--txt-main);
+      font-size: 18px;
       cursor: pointer;
     }
 
-    .app-title {
-      font-weight: 700;
-      font-size: 16px;
-      letter-spacing: 1px;
-    }
-
-    .app-title span {
-      color: #3b82f6;
-    }
-
-    .header-icons {
+    /* PROMINENT THEME SWITCH BUTTON */
+    .theme-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-col);
+      color: var(--txt-main);
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 20px;
       display: flex;
       align-items: center;
-      gap: 12px;
-    }
-
-    .badge {
-      background-color: #ef4444;
-      color: white;
-      font-size: 10px;
-      padding: 2px 5px;
-      border-radius: 10px;
-      position: relative;
-      top: -8px;
-      left: -8px;
-    }
-
-    /* Sliding Drawer Navigation */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -260px;
-      width: 250px;
-      height: 100%;
-      background-color: #111111;
-      border-right: 1px solid #222222;
-      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 1000;
-      padding-top: 20px;
-    }
-
-    .sidebar.open {
-      left: 0;
-    }
-
-    .sidebar-header {
-      font-size: 18px;
-      font-weight: 700;
-      color: #3b82f6;
-      padding: 0 20px 20px 20px;
-      border-bottom: 1px solid #222222;
-    }
-
-    .nav-list {
-      list-style: none;
-      margin-top: 10px;
-    }
-
-    .nav-link {
-      display: block;
-      padding: 14px 20px;
-      color: #888888;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      border-bottom: 1px solid #181818;
+      gap: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.2s ease;
     }
 
-    .nav-link:hover, .nav-link.active {
-      color: #3b82f6;
-      background-color: #181818;
+    .theme-btn:hover {
+      border-color: var(--accent-blue);
+      transform: scale(1.05);
     }
 
-    .overlay {
+    .topbar-title { font-weight: bold; font-size: 14px; }
+    .topbar-title span { color: var(--accent-blue); }
+
+    .notification-badge { position: relative; cursor: pointer; font-size: 16px; }
+    .badge-count {
+      background: var(--accent-red);
+      color: #fff;
+      font-size: 9px;
+      font-weight: bold;
+      padding: 2px 5px;
+      border-radius: 10px;
+      position: absolute;
+      top: -4px;
+      right: -6px;
+    }
+
+    /* Notification Drawer */
+    .notif-drawer {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      z-index: 999;
-    }
-
-    .overlay.active {
-      display: block;
-    }
-
-    /* Main Container & Sections */
-    main {
-      padding: 16px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* Dashboard UI Component Styling */
-    .horizon-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .horizon-label {
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .horizon-btn {
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      color: #888;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .horizon-btn.active {
-      background-color: #3b82f6;
-      color: #ffffff;
-      border-color: #3b82f6;
-    }
-
-    .grid-2x2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .card {
-      background-color: #121212;
-      border: 1px solid #222222;
-      border-radius: 8px;
+      top: 0; right: -280px; width: 260px; height: 100%;
+      background: var(--bg-sidebar);
+      border-left: 1px solid var(--border-col);
+      z-index: 1100;
+      transition: right 0.25s ease-in-out;
       padding: 12px;
+      box-shadow: -4px 0 12px rgba(0,0,0,0.1);
     }
+    .notif-drawer.open { right: 0; }
+    .notif-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-col); padding-bottom: 8px; }
+    .notif-header h4 { margin: 0; color: var(--accent-blue); }
+    .notif-header button { background: none; border: none; color: var(--txt-sub); cursor: pointer; }
+    .notif-list { list-style: none; padding: 0; margin: 10px 0; font-size: 11px; }
+    .notif-list li { padding: 8px 0; border-bottom: 1px solid var(--border-col); }
 
-    .card-title {
-      font-size: 11px;
-      color: #888;
-      margin-bottom: 6px;
+    /* Sidebar Drawer */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0; width: 200px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border-col);
+      transform: translateX(-100%);
+      transition: transform 0.25s ease-in-out;
+      z-index: 1000;
+      box-shadow: 4px 0 12px rgba(0,0,0,0.1);
     }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 999; }
+    .sidebar-overlay.open { display: block; }
 
-    .card-value {
-      font-size: 16px;
-      font-weight: 700;
-    }
+    .brand { padding: 15px; border-bottom: 1px solid var(--border-col); }
+    .brand h3 { margin: 0; color: var(--accent-blue); }
+    .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
+    .sidebar nav li { padding: 12px 15px; border-bottom: 1px solid var(--border-col); color: var(--txt-sub); cursor: pointer; font-weight: 500; }
+    .sidebar nav li.active, .sidebar nav li:hover { background: var(--accent-blue); color: #fff; }
 
-    .val-critical { color: #ef4444; }
-    .val-success { color: #10b981; }
+    /* Layout Content */
+    .main-container { padding: 10px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .tag-red {
-      display: inline-block;
-      border: 1px solid #ef4444;
-      color: #ef4444;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-top: 4px;
-    }
+    .horizon-panel { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+    .t-btn { background: var(--bg-card); border: 1px solid var(--border-col); color: var(--txt-sub); padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+    .t-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
 
-    .panel {
-      background-color: #121212;
-      border: 1px solid #222222;
-      border-radius: 8px;
-      padding: 14px;
-      margin-bottom: 16px;
-    }
+    .compact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+    .mini-card { background: var(--bg-card); border: 1px solid var(--border-col); padding: 8px 10px; border-radius: 6px; }
+    .mini-card .lbl { color: var(--txt-sub); font-size: 10px; display: block; }
+    .mini-card .val { font-size: 13px; font-weight: bold; margin-top: 2px; }
 
-    .panel-header {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      color: #aaa;
-      margin-bottom: 12px;
-    }
+    .conf-high { color: var(--accent-green); }
+    .badge-attack { display: inline-block; background: rgba(220, 38, 38, 0.1); color: var(--accent-red); border: 1px solid var(--accent-red); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-top: 2px; }
 
-    .pipeline-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      text-align: center;
-    }
+    .engine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .engine-status { background: var(--bg-sidebar); border: 1px solid var(--border-col); padding: 6px; border-radius: 4px; text-align: center; }
+    .e-name { display: block; font-size: 9px; color: var(--txt-sub); }
+    .e-state { display: block; font-size: 9px; color: var(--accent-green); font-weight: bold; margin-top: 2px; }
 
-    .pipeline-box {
-      background-color: #181818;
-      border: 1px solid #282828;
-      border-radius: 6px;
-      padding: 8px 4px;
-    }
+    .shap-container { display: flex; flex-direction: column; gap: 6px; }
+    .shap-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .s-label { font-size: 10px; width: 110px; color: var(--txt-sub); }
+    .s-bar-bg { flex: 1; height: 6px; background: var(--bg-sidebar); border-radius: 3px; overflow: hidden; }
+    .s-bar { height: 100%; border-radius: 3px; }
+    .s-val { font-size: 10px; font-weight: bold; width: 35px; text-align: right; }
 
-    .pipeline-box .name {
-      font-size: 10px;
-      color: #ccc;
-    }
+    .text-danger-bg { background: var(--accent-red); }
+    .text-warning-bg { background: var(--accent-orange); }
+    .text-accent-bg { background: var(--accent-blue); }
+    .text-green-bg { background: var(--accent-green); }
 
-    .pipeline-box .status {
-      font-size: 10px;
-      color: #10b981;
-      font-weight: 700;
-      margin-top: 4px;
-    }
+    .card { background: var(--bg-card); border: 1px solid var(--border-col); border-radius: 6px; padding: 10px; margin-bottom: 10px; }
+    .card h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--txt-sub); text-transform: uppercase; }
 
-    /* SHAP Feature Bars */
-    .shap-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      font-size: 11px;
-    }
+    .map-box, .chart-box { height: 160px; width: 100%; position: relative; background: var(--canvas-bg); border-radius: 4px; }
+    canvas { width: 100% !important; height: 100% !important; }
 
-    .shap-label {
-      width: 40%;
-      color: #ccc;
-    }
+    .tbl-box { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th, td { padding: 6px; text-align: left; border-bottom: 1px solid var(--border-col); }
+    th { color: var(--txt-sub); }
 
-    .shap-bar-bg {
-      width: 45%;
-      height: 8px;
-      background-color: #1d1d1d;
-      border-radius: 4px;
-      overflow: hidden;
-    }
+    .action-row { display: flex; justify-content: space-between; align-items: center; }
+    code { color: var(--accent-orange); font-size: 10px; background: var(--bg-sidebar); padding: 3px 6px; border-radius: 3px; }
+    .sm-btn { background: var(--accent-blue); color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
+    .sett-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
 
-    .shap-bar-fill {
-      height: 100%;
-      border-radius: 4px;
-    }
-
-    .shap-val {
-      width: 15%;
-      text-align: right;
-      font-weight: 700;
-    }
-
-    /* Simple Forecast Visualizer */
-    .chart-box {
-      height: 120px;
-      display: flex;
-      align-items: flex-end;
-      position: relative;
-      border-bottom: 1px dashed #333;
-      padding-bottom: 8px;
-    }
-
-    .chart-svg {
-      width: 100%;
-      height: 100%;
-    }
+    .text-danger { color: var(--accent-red); }
+    .text-accent { color: var(--accent-blue); }
+    .text-green { color: var(--accent-green); font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="header-left">
-      <button class="menu-toggle" id="menuToggle">☰</button>
-      <div class="app-title">ASTRA <span>RADAR</span></div>
+  <!-- TOP BAR WITH CLEAR THEME TOGGLE BUTTON -->
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <div class="topbar-title">ASTRA <span>RADAR</span></div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <!-- THEME SWITCH BUTTON -->
+      <button class="theme-btn" id="themeToggle">
+        <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
+      </button>
+      <div class="notification-badge" id="notifBtn">
+        🔔 <span class="badge-count" id="notifCount">3</span>
+      </div>
     </div>
-    <div class="header-icons">
-      <span>☀️</span>
-      <div>🔔<span class="badge">3</span></div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- Notification Drawer -->
+  <div class="notif-drawer" id="notifDrawer">
+    <div class="notif-header">
+      <h4>Real-Time Alerts</h4>
+      <button id="closeNotif">✕</button>
     </div>
-  </header>
+    <ul class="notif-list" id="notifList"></ul>
+  </div>
 
-  <div class="overlay" id="overlay"></div>
+  <!-- Sidebar Navigation Drawer -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <h3>ASTRA v3.0</h3>
+    </div>
+    <nav>
+      <ul>
+        <li class="nav-item active" data-tab="dashboard">Dashboard</li>
+        <li class="nav-item" data-tab="network-radar">Network Radar</li>
+        <li class="nav-item" data-tab="threat-intel">Threat Intel</li>
+        <li class="nav-item" data-tab="settings">Settings</li>
+      </ul>
+    </nav>
+  </aside>
 
-  <nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">ASTRA v3.0</div>
-    <ul class="nav-list">
-      <li><a href="#" class="nav-link active" onclick="switchTab(event, 'dashboard')">Dashboard</a></li>
-      <li><a href="#" class="nav-link" onclick="switchTab(event, 'network-radar')">Network Radar</a></li>
-      <li><a href="#" class="nav-link" onclick="switchTab(event, 'threat-intel')">Threat Intel</a></li>
-      <li><a href="#" class="nav-link" onclick="switchTab(event, 'settings')">Settings</a></li>
-    </ul>
-  </nav>
+  <!-- Main Container -->
+  <main class="main-container">
 
-  <main>
+    <!-- DASHBOARD VIEW -->
     <section id="dashboard" class="tab-content active">
-      <div class="horizon-container">
-        <span class="horizon-label">Horizon Window:</span>
-        <button class="horizon-btn active">15m</button>
-        <button class="horizon-btn">30m</button>
-        <button class="horizon-btn">1h</button>
-        <button class="horizon-btn">24h</button>
+
+      <div class="horizon-panel">
+        <span class="lbl">Horizon Window:</span>
+        <button class="t-btn active" data-time="15m">15m</button>
+        <button class="t-btn" data-time="30m">30m</button>
+        <button class="t-btn" data-time="1h">1h</button>
+        <button class="t-btn" data-time="24h">24h</button>
       </div>
 
-      <div class="grid-2x2">
-        <div class="card">
-          <div class="card-title">Threat Level</div>
-          <div class="card-value val-critical">CRITICAL</div>
+      <div class="compact-grid">
+        <div class="mini-card text-danger">
+          <span class="lbl">Threat Level</span>
+          <div class="val">CRITICAL</div>
         </div>
-        <div class="card">
-          <div class="card-title">AI Confidence</div>
-          <div class="card-value val-success">94.8%</div>
+        <div class="mini-card">
+          <span class="lbl">AI Confidence</span>
+          <div class="val conf-high" id="confScore">94.8%</div>
         </div>
-        <div class="card">
-          <div class="card-title">Traffic Baseline</div>
-          <div class="card-value">4.2k r/s</div>
+        <div class="mini-card">
+          <span class="lbl">Traffic Baseline</span>
+          <div class="val" id="trafVal">4.2k r/s</div>
         </div>
-        <div class="card">
-          <div class="card-title">Attack Vector</div>
-          <div class="tag-red">SYN-FLOOD (DDoS)</div>
+        <div class="mini-card">
+          <span class="lbl">Attack Vector</span>
+          <div class="badge-attack" id="attackBadge">SYN-FLOOD</div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">ENSEMBLE AI ENGINE PIPELINE</div>
-        <div class="pipeline-grid">
-          <div class="pipeline-box">
-            <div class="name">LSTM Predictor</div>
-            <div class="status">ACTIVE (99.2%)</div>
+      <div class="card">
+        <h4>Ensemble AI Engine Pipeline</h4>
+        <div class="engine-grid">
+          <div class="engine-status active">
+            <span class="e-name">LSTM Predictor</span>
+            <span class="e-state">ACTIVE (99.2%)</span>
           </div>
-          <div class="pipeline-box">
-            <div class="name">Spatial GNN</div>
-            <div class="status">ACTIVE (96.4%)</div>
+          <div class="engine-status active">
+            <span class="e-name">Spatial GNN</span>
+            <span class="e-state">ACTIVE (96.4%)</span>
           </div>
-          <div class="pipeline-box">
-            <div class="name">XGBoost SHAP</div>
-            <div class="status">ACTIVE (98.1%)</div>
+          <div class="engine-status active">
+            <span class="e-name">XGBoost SHAP</span>
+            <span class="e-state">ACTIVE (98.1%)</span>
           </div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">SHAP FEATURE ATTRIBUTION (EXPLAINABILITY)</div>
-        
-        <div class="shap-row">
-          <span class="shap-label">SYN Packet Ratio</span>
-          <div class="shap-bar-bg"><div class="shap-bar-fill" style="width: 85%; background-color: #ef4444;"></div></div>
-          <span class="shap-val" style="color:#ef4444;">+0.42</span>
-        </div>
-
-        <div class="shap-row">
-          <span class="shap-label">Port Scan Rate</span>
-          <div class="shap-bar-bg"><div class="shap-bar-fill" style="width: 60%; background-color: #f97316;"></div></div>
-          <span class="shap-val" style="color:#f97316;">+0.28</span>
-        </div>
-
-        <div class="shap-row">
-          <span class="shap-label">Geo-Anomaly Index</span>
-          <div class="shap-bar-bg"><div class="shap-bar-fill" style="width: 35%; background-color: #3b82f6;"></div></div>
-          <span class="shap-val" style="color:#3b82f6;">+0.15</span>
-        </div>
-
-        <div class="shap-row">
-          <span class="shap-label">Payload Size Deviation</span>
-          <div class="shap-bar-bg"><div class="shap-bar-fill" style="width: 20%; background-color: #10b981;"></div></div>
-          <span class="shap-val" style="color:#10b981;">-0.08</span>
+      <div class="card">
+        <h4>SHAP Feature Attribution (Explainability)</h4>
+        <div class="shap-container">
+          <div class="shap-row">
+            <span class="s-label">SYN Packet Ratio</span>
+            <div class="s-bar-bg"><div class="s-bar text-danger-bg" style="width: 88%;"></div></div>
+            <span class="s-val">+0.42</span>
+          </div>
+          <div class="shap-row">
+            <span class="s-label">Port Scan Rate</span>
+            <div class="s-bar-bg"><div class="s-bar text-warning-bg" style="width: 65%;"></div></div>
+            <span class="s-val">+0.28</span>
+          </div>
+          <div class="shap-row">
+            <span class="s-label">Geo-Anomaly Index</span>
+            <div class="s-bar-bg"><div class="s-bar text-accent-bg" style="width: 45%;"></div></div>
+            <span class="s-val">+0.15</span>
+          </div>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="panel-header">REAL-TIME TRAFFIC VS MULTI-HORIZON FORECAST</div>
+      <div class="card">
+        <h4>Real-Time Traffic vs Multi-Horizon Forecast</h4>
         <div class="chart-box">
-          <svg class="chart-svg" viewBox="0 0 300 100" preserveAspectRatio="none">
-            <path d="M 0 80 L 120 80" stroke="#3b82f6" stroke-width="2" fill="none" />
-            <path d="M 120 80 L 180 30" stroke="#3b82f6" stroke-width="2" fill="none" />
-            <path d="M 180 30 L 280 10" stroke="#ef4444" stroke-width="2" stroke-dasharray="4" fill="none" />
-            <path d="M 120 80 L 280 78" stroke="#f97316" stroke-width="2" stroke-dasharray="2" fill="none" />
-          </svg>
+          <canvas id="miniChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Targeted Locations & Origins</h4>
+        <div class="map-box">
+          <canvas id="locationMap"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Auto-Response Action Log</h4>
+        <div class="tbl-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Target Node</th>
+                <th>Mitigation Triggered</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="autoActionTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- NETWORK RADAR VIEW -->
+    <section id="network-radar" class="tab-content">
+      <div class="card">
+        <h4>GNN Network Topology Mesh</h4>
+        <div class="map-box">
+          <canvas id="gnnTopologyCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Live Threat Sweep</h4>
+        <div class="map-box">
+          <canvas id="radarCanvas"></canvas>
         </div>
       </div>
     </section>
 
-    <section id="network-radar" class="tab-content">
-      <div class="panel">
-        <div class="panel-header">NETWORK RADAR TELEMETRY</div>
-        <p style="font-size: 13px; color: #aaa;">Live packet monitoring and node status active.</p>
-      </div>
-    </section>
-
+    <!-- THREAT INTEL VIEW -->
     <section id="threat-intel" class="tab-content">
-      <div class="panel">
-        <div class="panel-header">THREAT INTELLIGENCE FEED</div>
-        <p style="font-size: 13px; color: #aaa;">Global threat database and attack vector signatures loaded.</p>
+      <div class="card">
+        <h4>Delhi Node Attack Intelligence</h4>
+        <p><strong>Origin IP:</strong> 103.21.244.12 (Delhi, IN)</p>
+        <p><strong>Attack Vector:</strong> SYN-FLOOD / SSH Brute Force</p>
+        <p><strong>Risk Index:</strong> 8.9 / 10</p>
+      </div>
+      <div class="card">
+        <h4>Automated Firewall Rules</h4>
+        <div class="action-row">
+          <code>iptables -A INPUT -s 103.21.244.12 -j DROP</code>
+          <button class="sm-btn">Execute</button>
+        </div>
       </div>
     </section>
 
+    <!-- SETTINGS VIEW -->
     <section id="settings" class="tab-content">
-      <div class="panel">
-        <div class="panel-header">SYSTEM CONFIGURATION</div>
-        <p style="font-size: 13px; color: #aaa;">Configure AI thresholds, alerts, and model weights.</p>
+      <div class="card">
+        <h4>Model Controls</h4>
+        <div class="sett-row">
+          <span>Enable Ensemble AI Auto-Mitigation</span>
+          <input type="checkbox" checked>
+        </div>
       </div>
     </section>
+
   </main>
 
   <script>
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
+    document.addEventListener('DOMContentLoaded', () => {
 
-    // Drawer Toggle Logic
-    function toggleMenu() {
-      sidebar.classList.toggle('open');
-      overlay.classList.toggle('active');
-    }
+      // Theme Switching Logic
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeText = document.getElementById('themeText');
+      
+      let currentTheme = localStorage.getItem('astra-theme') || 'light';
 
-    menuToggle.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          if (themeIcon) themeIcon.innerText = '☀️';
+          if (themeText) themeText.innerText = 'Cream';
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          if (themeIcon) themeIcon.innerText = '🌙';
+          if (themeText) themeText.innerText = 'Dark';
+        }
+        renderDashboardComponents();
+      }
 
-    // Tab Switching Function (Prevents Loss of Data or State)
-    function switchTab(event, targetId) {
-      if (event) event.preventDefault();
+      applyTheme(currentTheme);
 
-      // 1. Get all sections and nav links
-      const sections = document.querySelectorAll('.tab-content');
-      const navLinks = document.querySelectorAll('.nav-link');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+          localStorage.setItem('astra-theme', currentTheme);
+          applyTheme(currentTheme);
+        });
+      }
 
-      // 2. Hide all view sections without destroying elements in memory
-      sections.forEach(section => {
-        section.style.display = 'none';
-        section.classList.remove('active');
+      // Drawer and Tab Navigation
+      const menuBtn = document.getElementById('menuBtn');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const navItems = document.querySelectorAll('.nav-item');
+      const tabContents = document.querySelectorAll('.tab-content');
+      const notifBtn = document.getElementById('notifBtn');
+      const notifDrawer = document.getElementById('notifDrawer');
+      const closeNotif = document.getElementById('closeNotif');
+
+      function closeAllDrawers() {
+        sidebar.classList.remove('open');
+        if (notifDrawer) notifDrawer.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+
+      if (menuBtn) menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
+      if (notifBtn) notifBtn.addEventListener('click', () => { notifDrawer.classList.toggle('open'); overlay.classList.toggle('open'); });
+      if (closeNotif) closeNotif.addEventListener('click', closeAllDrawers);
+      if (overlay) overlay.addEventListener('click', closeAllDrawers);
+
+      navItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const tab = item.getAttribute('data-tab');
+          navItems.forEach(i => i.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
+
+          item.classList.add('active');
+          document.getElementById(tab).classList.add('active');
+          closeAllDrawers();
+
+          if (tab === 'network-radar') {
+            renderRadar();
+            renderGNNTopology();
+          }
+          if (tab === 'dashboard') {
+            renderDashboardComponents();
+          }
+        });
       });
 
-      // 3. Display target section
-      const targetSection = document.getElementById(targetId);
-      if (targetSection) {
-        targetSection.style.display = 'block';
-        targetSection.classList.add('active');
+      function renderDashboardComponents() {
+        renderHackerMap();
+        drawTrafficChart();
+        populateActionLog();
+        populateNotifications();
       }
 
-      // 4. Update active indicator on sidebar links
-      navLinks.forEach(link => link.classList.remove('active'));
-      if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
+      function getCanvasBg() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#121826' : '#ffffff';
       }
 
-      // 5. Close sidebar menu drawer
-      toggleMenu();
+      function getGridColor() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#e2e8f0';
+      }
 
-      // 6. Refresh charts or canvases if resized
-      window.dispatchEvent(new Event('resize'));
-    }
+      function getTextColor() {
+        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#94a3b8' : '#475569';
+      }
+
+      // Traffic Chart Render
+      function drawTrafficChart() {
+        const canvas = document.getElementById('miniChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth || 300;
+        canvas.height = canvas.parentElement.clientHeight || 140;
+
+        const w = canvas.width, h = canvas.height;
+        const paddingLeft = 30, paddingBottom = 20;
+        const chartW = w - paddingLeft - 10, chartH = h - paddingBottom - 20;
+
+        ctx.fillStyle = getCanvasBg();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = getGridColor();
+        ctx.lineWidth = 1;
+        for (let y = 0.2; y <= 1.0; y += 0.2) {
+          const yPos = 10 + chartH * y;
+          ctx.beginPath(); ctx.moveTo(paddingLeft, yPos); ctx.lineTo(w - 10, yPos); ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#ea580c';
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft + chartW * 0.05, 10 + chartH * 0.8);
+        ctx.lineTo(paddingLeft + chartW * 0.95, 10 + chartH * 0.75);
+        ctx.stroke();
+
+        ctx.setLineDash([]);
+        ctx.strokeStyle = '#2563eb';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft + chartW * 0.05, 10 + chartH * 0.8);
+        ctx.lineTo(paddingLeft + chartW * 0.3, 10 + chartH * 0.75);
+        ctx.lineTo(paddingLeft + chartW * 0.5, 10 + chartH * 0.35);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#dc2626';
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(paddingLeft + chartW * 0.5, 10 + chartH * 0.35);
+        ctx.lineTo(paddingLeft + chartW * 0.95, 10 + chartH * 0.1);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      function renderGNNTopology() {
+        const canvas = document.getElementById('gnnTopologyCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth || 300;
+        canvas.height = canvas.parentElement.clientHeight || 160;
+
+        const w = canvas.width, h = canvas.height;
+        ctx.fillStyle = getCanvasBg();
+        ctx.fillRect(0, 0, w, h);
+
+        const nodes = [
+          { id: 'Auth-Node', x: w * 0.2, y: h * 0.3, status: '#dc2626' },
+          { id: 'API-Edge', x: w * 0.5, y: h * 0.2, status: '#2563eb' },
+          { id: 'DB-Core', x: w * 0.8, y: h * 0.4, status: '#059669' },
+          { id: 'Delhi-Node', x: w * 0.35, y: h * 0.7, status: '#dc2626' },
+          { id: 'SG-SafeZone', x: w * 0.7, y: h * 0.75, status: '#059669' }
+        ];
+
+        const edges = [[0, 1], [0, 3], [1, 2], [3, 4], [1, 4]];
+
+        ctx.strokeStyle = getGridColor();
+        ctx.lineWidth = 1.5;
+        edges.forEach(e => {
+          const n1 = nodes[e[0]], n2 = nodes[e[1]];
+          ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
+        });
+
+        nodes.forEach(n => {
+          ctx.fillStyle = n.status;
+          ctx.beginPath(); ctx.arc(n.x, n.y, 6, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = getTextColor();
+          ctx.font = '9px sans-serif';
+          ctx.fillText(n.id, n.x + 8, n.y + 3);
+        });
+      }
+
+      function renderHackerMap() {
+        const canvas = document.getElementById('locationMap');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth || 300;
+        canvas.height = canvas.parentElement.clientHeight || 160;
+
+        const w = canvas.width, h = canvas.height;
+        ctx.fillStyle = getCanvasBg();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = getGridColor();
+        for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+
+        const locs = [
+          { name: 'Delhi, IN (103.21.244.12)', x: w * 0.6, y: h * 0.45, color: '#dc2626' },
+          { name: 'ASTRA SAFE ZONE (Singapore)', x: w * 0.72, y: h * 0.7, color: '#059669' }
+        ];
+
+        locs.forEach(l => {
+          ctx.fillStyle = l.color;
+          ctx.beginPath(); ctx.arc(l.x, l.y, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = getTextColor();
+          ctx.font = '9px sans-serif';
+          ctx.fillText(l.name, l.x + 8, l.y + 3);
+        });
+      }
+
+      let rAngle = 0;
+      function renderRadar() {
+        const canvas = document.getElementById('radarCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = canvas.parentElement.clientWidth || 300;
+        canvas.height = canvas.parentElement.clientHeight || 160;
+
+        const w = canvas.width, h = canvas.height, r = Math.min(w, h) / 2 - 10;
+        const cx = w / 2, cy = h / 2;
+
+        ctx.fillStyle = getCanvasBg();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = '#05966933';
+        for (let radius = 20; radius <= r; radius += 25) { ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke(); }
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rAngle);
+        ctx.fillStyle = 'rgba(5, 150, 105, 0.15)';
+        ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r, 0, Math.PI / 4); ctx.fill();
+        ctx.restore();
+
+        rAngle += 0.04;
+        requestAnimationFrame(renderRadar);
+      }
+
+      function populateActionLog() {
+        const tbody = document.getElementById('autoActionTable');
+        if (!tbody) return;
+        const logs = [
+          { time: 'Now', target: 'Auth-Gateway (Delhi)', action: 'Firewall BGP Blackhole', status: 'EXECUTED', class: 'text-green' },
+          { time: '-2m', target: 'DB-Cluster (Tokyo)', action: 'Rate Limit (100 req/s)', status: 'ACTIVE', class: 'text-accent' },
+          { time: '-15m', target: 'API-Edge (Dallas)', action: 'SYN Cookie Challenge', status: 'MITIGATED', class: 'text-green' }
+        ];
+        tbody.innerHTML = '';
+        logs.forEach(l => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${l.time}</td><td>${l.target}</td><td>${l.action}</td><td class="${l.class}">${l.status}</td>`;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function populateNotifications() {
+        const notifList = document.getElementById('notifList');
+        if (!notifList) return;
+        const notifs = [
+          '🚨 <strong>CRITICAL:</strong> High SYN-Flood anomaly detected in Delhi Node.',
+          '🛡️ <strong>AUTO-MITIGATION:</strong> BGP Drop triggered on 103.21.244.12.',
+          '🤖 <strong>GNN ENGINE:</strong> Neighbor node risk propagation score elevated to 88%.'
+        ];
+        notifList.innerHTML = '';
+        notifs.forEach(n => {
+          const li = document.createElement('li');
+          li.innerHTML = n;
+          notifList.appendChild(li);
+        });
+      }
+
+      renderDashboardComponents();
+      window.addEventListener('resize', renderDashboardComponents);
+    });
   </script>
 </body>
 </html>
