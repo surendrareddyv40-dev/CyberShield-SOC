@@ -2,174 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ASTRA-FORECAST | Predictive Cyber Threat Radar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ASTRA Mini Dashboard</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-  <!-- Mobile Sidebar Toggle -->
-  <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+  <!-- Top Bar for Mobile -->
+  <div class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <div class="topbar-title">ASTRA <span>RADAR</span></div>
+  </div>
+
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- Navigation Sidebar -->
+  <!-- Slide-out Navigation Drawer -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
-      <h2>ASTRA</h2>
-      <span class="subtitle">FORECAST v2.4</span>
+      <h3>ASTRA v2.0</h3>
     </div>
     <nav>
       <ul>
         <li class="nav-item active" data-tab="dashboard">Dashboard</li>
         <li class="nav-item" data-tab="network-radar">Network Radar</li>
-        <li class="nav-item" data-tab="threat-intel">Threat Intelligence</li>
+        <li class="nav-item" data-tab="threat-intel">Threat Intel</li>
         <li class="nav-item" data-tab="settings">Settings</li>
       </ul>
     </nav>
-    <div class="sidebar-footer">
-      <p>Node Status: <span class="text-online">● ONLINE</span></p>
-    </div>
   </aside>
 
-  <!-- Main Work Area -->
-  <main class="main-content">
+  <!-- Compact Main Container -->
+  <main class="main-container">
 
-    <!-- Top Navigation & Controls Header -->
-    <header>
-      <div>
-        <h1 id="page-title">Predictive Defense Dashboard</h1>
-        <p class="text-muted">Real-time threat monitoring and predictive vector tracking</p>
-      </div>
-
-      <!-- Time Interval Controls -->
-      <div class="time-filter">
-        <span>Time Horizon:</span>
-        <button class="time-btn active" data-time="22m">22 Mins</button>
-        <button class="time-btn" data-time="30m">30 Mins</button>
-        <button class="time-btn" data-time="1h">1 Hour</button>
-        <button class="time-btn" data-time="24h">24 Hours</button>
-      </div>
-    </header>
-
-    <!-- SECTION 1: DASHBOARD VIEW -->
+    <!-- View 1: Dashboard -->
     <section id="dashboard" class="tab-content active">
-      <div class="metrics-grid">
-        <div class="card">
-          <h3>Threat Level</h3>
-          <p class="metric-value text-danger" id="threat-level">CRITICAL</p>
-          <span class="metric-sub text-muted">Elevated SYN Flood activity</span>
+      <div class="time-bar">
+        <span>Interval:</span>
+        <button class="t-btn active" data-time="22m">22m</button>
+        <button class="t-btn" data-time="30m">30m</button>
+        <button class="t-btn" data-time="1h">1h</button>
+      </div>
+
+      <div class="compact-grid">
+        <div class="mini-card text-danger">
+          <span class="lbl">Threat Level</span>
+          <div class="val">CRITICAL</div>
         </div>
-        <div class="card">
-          <h3>Predictive Risk Score</h3>
-          <p class="metric-value text-warning" id="risk-score">84%</p>
-          <span class="metric-sub text-muted">+14% vs last hour</span>
+        <div class="mini-card text-warning">
+          <span class="lbl">Risk Index</span>
+          <div class="val" id="riskVal">84%</div>
         </div>
-        <div class="card">
-          <h3>Server Traffic Volume</h3>
-          <p class="metric-value" id="traffic-vol">4,280 req/s</p>
-          <span class="metric-sub text-online">Normal Baseline: 1,200 req/s</span>
+        <div class="mini-card">
+          <span class="lbl">Traffic</span>
+          <div class="val" id="trafVal">4.2k r/s</div>
         </div>
-        <div class="card">
-          <h3>Forecast Window</h3>
-          <p class="metric-value text-accent">15 - 60 Min</p>
-          <span class="metric-sub text-muted">Model: LSTM-Cyber-v4</span>
+        <div class="mini-card text-accent">
+          <span class="lbl">Forecast</span>
+          <div class="val">+22 min</div>
         </div>
       </div>
 
-      <div class="charts-grid">
-        <div class="card chart-container">
-          <h3>Live & Forecasted Server Traffic</h3>
-          <canvas id="trafficChart"></canvas>
-        </div>
-        <div class="card chart-container">
-          <h3>Vector Distribution</h3>
-          <canvas id="attackChart"></canvas>
+      <!-- Hacker Live Location Feed -->
+      <div class="card">
+        <h4>Targeted Locations & Origins</h4>
+        <div class="map-box">
+          <canvas id="locationMap"></canvas>
         </div>
       </div>
 
       <div class="card">
-        <h3>Live Threat Log & Attack Predictions</h3>
-        <div class="table-wrapper">
+        <h4>Traffic Forecast Chart</h4>
+        <div class="chart-box">
+          <canvas id="miniChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Recent Attack Vectors</h4>
+        <div class="tbl-box">
           <table>
             <thead>
               <tr>
-                <th>Time Window</th>
-                <th>Source IP / Hacker Location</th>
-                <th>Target Node</th>
-                <th>Attack Vector</th>
-                <th>Confidence</th>
-                <th>Status</th>
+                <th>Time</th>
+                <th>Origin / Target</th>
+                <th>Vector</th>
               </tr>
             </thead>
-            <tbody id="threat-logs">
-              <!-- Content injected via JavaScript -->
+            <tbody id="logsTable">
+              <!-- JS Injected -->
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: NETWORK RADAR VIEW -->
+    <!-- View 2: Network Radar -->
     <section id="network-radar" class="tab-content">
-      <div class="radar-layout">
-        <div class="card radar-canvas-card">
-          <h3>Live Global Hacker Attack Radar Map</h3>
-          <div class="radar-container">
-            <canvas id="radarMap"></canvas>
-          </div>
+      <div class="card">
+        <h4>Live Threat Radar Sweep</h4>
+        <div class="map-box">
+          <canvas id="radarCanvas"></canvas>
         </div>
-
-        <div class="card radar-feed">
-          <h3>Active Connection Vectors</h3>
-          <ul id="radar-feed-list" class="feed-list">
-            <!-- Active targeted vectors dynamically added -->
-          </ul>
-        </div>
+      </div>
+      <div class="card">
+        <h4>Intercepted Nodes</h4>
+        <ul class="node-list" id="nodeList"></ul>
       </div>
     </section>
 
-    <!-- SECTION 3: THREAT INTELLIGENCE VIEW -->
+    <!-- View 3: Threat Intelligence -->
     <section id="threat-intel" class="tab-content">
-      <div class="intel-grid">
-        <div class="card">
-          <h3>Known Malicious Threat Actors</h3>
-          <div class="actor-list" id="actorList">
-            <!-- Populated dynamically -->
-          </div>
-        </div>
-        <div class="card">
-          <h3>Automated Firewall Rule Suggestions</h3>
-          <div class="rule-box">
-            <code>iptables -A INPUT -s 185.220.101.5 -j DROP</code>
-            <button class="btn-action">Apply Rule</button>
-          </div>
-          <div class="rule-box">
-            <code>iptables -A INPUT -s 45.33.32.156 --dport 80,443 -m limit --limit 25/minute -j ACCEPT</code>
-            <button class="btn-action">Apply Rule</button>
-          </div>
+      <div class="card">
+        <h4>Delhi Node Attack Details</h4>
+        <p><strong>Origin IP:</strong> 103.21.244.12 (Delhi, IN)</p>
+        <p><strong>Vector:</strong> SSH Brute Force & SYN Flood</p>
+        <p><strong>Risk Impact:</strong> High (8.9/10)</p>
+      </div>
+      <div class="card">
+        <h4>Auto Firewall Action</h4>
+        <div class="action-row">
+          <code>iptables -A INPUT -s 103.21.244.12 -j DROP</code>
+          <button class="sm-btn">Block</button>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 4: SETTINGS VIEW -->
+    <!-- View 4: Settings -->
     <section id="settings" class="tab-content">
-      <div class="card settings-card">
-        <h3>System & AI Configuration</h3>
-        <div class="setting-item">
-          <label>Automated Predictive Mitigation (Auto-Block IPs)</label>
+      <div class="card">
+        <h4>System Rules</h4>
+        <div class="sett-row">
+          <span>Auto Block Threats</span>
           <input type="checkbox" checked>
         </div>
-        <div class="setting-item">
-          <label>Predictive Threat Threshold (%)</label>
-          <input type="range" min="50" max="99" value="75" id="threshold-slider">
-          <span id="threshold-val">75%</span>
+        <div class="sett-row">
+          <span>Alert Scale</span>
+          <input type="range" value="75" min="50" max="100">
         </div>
-        <div class="setting-item">
-          <label>Integrate SIEM / Webhook Alerts</label>
-          <input type="text" placeholder="https://api.yourdomain.com/v1/alerts" class="input-field">
-        </div>
-        <button class="btn-primary">Save Settings</button>
       </div>
     </section>
 
