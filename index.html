@@ -4,219 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ASTRA FORECAST RADAR</title>
-  <style>
-    /* 1. LIGHT / CREAM THEME (DEFAULT) */
-    :root {
-      --bg-dark: #fbf9f5;
-      --bg-card: #ffffff;
-      --bg-sidebar: #f3efe6;
-      --border-col: #e2dacd;
-      --txt-main: #1e293b;
-      --txt-sub: #64748b;
-      --accent-blue: #2563eb;
-      --accent-red: #dc2626;
-      --accent-orange: #ea580c;
-      --accent-green: #059669;
-      --canvas-bg: #ffffff;
-      --grid-line: #e2e8f0;
-    }
-
-    /* 2. DARK / CYBER THEME OVERRIDES */
-    [data-theme="dark"] {
-      --bg-dark: #0a0e17;
-      --bg-card: #121826;
-      --bg-sidebar: #0f1523;
-      --border-col: #1e293b;
-      --txt-main: #f8fafc;
-      --txt-sub: #64748b;
-      --accent-blue: #3b82f6;
-      --accent-red: #ef4444;
-      --accent-orange: #f97316;
-      --accent-green: #10b981;
-      --canvas-bg: #121826;
-      --grid-line: #1e293b;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--txt-main);
-      font-size: 12px;
-      transition: background-color 0.25s ease, color 0.25s ease;
-    }
-
-    /* Topbar */
-    .topbar {
-      height: 48px;
-      background: var(--bg-sidebar);
-      border-bottom: 1px solid var(--border-col);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .menu-btn {
-      background: none;
-      border: none;
-      color: var(--txt-main);
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    /* PROMINENT THEME SWITCH BUTTON */
-    .theme-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-col);
-      color: var(--txt-main);
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
-    }
-
-    .theme-btn:hover {
-      border-color: var(--accent-blue);
-      transform: scale(1.05);
-    }
-
-    .topbar-title { font-weight: bold; font-size: 14px; }
-    .topbar-title span { color: var(--accent-blue); }
-
-    .notification-badge { position: relative; cursor: pointer; font-size: 16px; }
-    .badge-count {
-      background: var(--accent-red);
-      color: #fff;
-      font-size: 9px;
-      font-weight: bold;
-      padding: 2px 5px;
-      border-radius: 10px;
-      position: absolute;
-      top: -4px;
-      right: -6px;
-    }
-
-    /* Notification Drawer */
-    .notif-drawer {
-      position: fixed;
-      top: 0; right: -280px; width: 260px; height: 100%;
-      background: var(--bg-sidebar);
-      border-left: 1px solid var(--border-col);
-      z-index: 1100;
-      transition: right 0.25s ease-in-out;
-      padding: 12px;
-      box-shadow: -4px 0 12px rgba(0,0,0,0.1);
-    }
-    .notif-drawer.open { right: 0; }
-    .notif-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-col); padding-bottom: 8px; }
-    .notif-header h4 { margin: 0; color: var(--accent-blue); }
-    .notif-header button { background: none; border: none; color: var(--txt-sub); cursor: pointer; }
-    .notif-list { list-style: none; padding: 0; margin: 10px 0; font-size: 11px; }
-    .notif-list li { padding: 8px 0; border-bottom: 1px solid var(--border-col); }
-
-    /* Sidebar Drawer */
-    .sidebar {
-      position: fixed;
-      top: 0; left: 0; bottom: 0; width: 200px;
-      background: var(--bg-sidebar);
-      border-right: 1px solid var(--border-col);
-      transform: translateX(-100%);
-      transition: transform 0.25s ease-in-out;
-      z-index: 1000;
-      box-shadow: 4px 0 12px rgba(0,0,0,0.1);
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); z-index: 999; }
-    .sidebar-overlay.open { display: block; }
-
-    .brand { padding: 15px; border-bottom: 1px solid var(--border-col); }
-    .brand h3 { margin: 0; color: var(--accent-blue); }
-    .sidebar nav ul { list-style: none; padding: 0; margin: 0; }
-    .sidebar nav li { padding: 12px 15px; border-bottom: 1px solid var(--border-col); color: var(--txt-sub); cursor: pointer; font-weight: 500; }
-    .sidebar nav li.active, .sidebar nav li:hover { background: var(--accent-blue); color: #fff; }
-
-    /* Layout Content */
-    .main-container { padding: 10px; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    .horizon-panel { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
-    .t-btn { background: var(--bg-card); border: 1px solid var(--border-col); color: var(--txt-sub); padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-    .t-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
-
-    .compact-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
-    .mini-card { background: var(--bg-card); border: 1px solid var(--border-col); padding: 8px 10px; border-radius: 6px; }
-    .mini-card .lbl { color: var(--txt-sub); font-size: 10px; display: block; }
-    .mini-card .val { font-size: 13px; font-weight: bold; margin-top: 2px; }
-
-    .conf-high { color: var(--accent-green); }
-    .badge-attack { display: inline-block; background: rgba(220, 38, 38, 0.1); color: var(--accent-red); border: 1px solid var(--accent-red); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-top: 2px; }
-
-    .engine-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .engine-status { background: var(--bg-sidebar); border: 1px solid var(--border-col); padding: 6px; border-radius: 4px; text-align: center; }
-    .e-name { display: block; font-size: 9px; color: var(--txt-sub); }
-    .e-state { display: block; font-size: 9px; color: var(--accent-green); font-weight: bold; margin-top: 2px; }
-
-    .shap-container { display: flex; flex-direction: column; gap: 6px; }
-    .shap-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .s-label { font-size: 10px; width: 110px; color: var(--txt-sub); }
-    .s-bar-bg { flex: 1; height: 6px; background: var(--bg-sidebar); border-radius: 3px; overflow: hidden; }
-    .s-bar { height: 100%; border-radius: 3px; }
-    .s-val { font-size: 10px; font-weight: bold; width: 35px; text-align: right; }
-
-    .text-danger-bg { background: var(--accent-red); }
-    .text-warning-bg { background: var(--accent-orange); }
-    .text-accent-bg { background: var(--accent-blue); }
-    .text-green-bg { background: var(--accent-green); }
-
-    .card { background: var(--bg-card); border: 1px solid var(--border-col); border-radius: 6px; padding: 10px; margin-bottom: 10px; }
-    .card h4 { margin: 0 0 8px 0; font-size: 11px; color: var(--txt-sub); text-transform: uppercase; }
-
-    .map-box, .chart-box { height: 160px; width: 100%; position: relative; background: var(--canvas-bg); border-radius: 4px; }
-    canvas { width: 100% !important; height: 100% !important; }
-
-    .tbl-box { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    th, td { padding: 6px; text-align: left; border-bottom: 1px solid var(--border-col); }
-    th { color: var(--txt-sub); }
-
-    .action-row { display: flex; justify-content: space-between; align-items: center; }
-    code { color: var(--accent-orange); font-size: 10px; background: var(--bg-sidebar); padding: 3px 6px; border-radius: 3px; }
-    .sm-btn { background: var(--accent-blue); color: #fff; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; }
-    .sett-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
-
-    .text-danger { color: var(--accent-red); }
-    .text-accent { color: var(--accent-blue); }
-    .text-green { color: var(--accent-green); font-weight: bold; }
-  </style>
+  <!-- Cache busting tag added to force theme update -->
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
-<body>
+<body style="background-color: #fbf9f5 !important;">
 
-  <!-- TOP BAR WITH CLEAR THEME TOGGLE BUTTON -->
+  <!-- Top Bar with Real-Time Alerts -->
   <div class="topbar">
     <button class="menu-btn" id="menuBtn">☰</button>
     <div class="topbar-title">ASTRA <span>RADAR</span></div>
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <!-- THEME SWITCH BUTTON -->
-      <button class="theme-btn" id="themeToggle">
-        <span id="themeIcon">🌙</span> <span id="themeText">Dark</span>
-      </button>
-      <div class="notification-badge" id="notifBtn">
-        🔔 <span class="badge-count" id="notifCount">3</span>
-      </div>
+    <div class="notification-badge" id="notifBtn">
+      🔔 <span class="badge-count" id="notifCount">3</span>
     </div>
   </div>
 
@@ -228,10 +26,12 @@
       <h4>Real-Time Alerts</h4>
       <button id="closeNotif">✕</button>
     </div>
-    <ul class="notif-list" id="notifList"></ul>
+    <ul class="notif-list" id="notifList">
+      <!-- Dynamically Populated -->
+    </ul>
   </div>
 
-  <!-- Sidebar Navigation Drawer -->
+  <!-- Sidebar Drawer Navigation -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <h3>ASTRA v3.0</h3>
@@ -252,6 +52,7 @@
     <!-- DASHBOARD VIEW -->
     <section id="dashboard" class="tab-content active">
 
+      <!-- Multi-Horizon Forecast Panel -->
       <div class="horizon-panel">
         <span class="lbl">Horizon Window:</span>
         <button class="t-btn active" data-time="15m">15m</button>
@@ -260,25 +61,32 @@
         <button class="t-btn" data-time="24h">24h</button>
       </div>
 
+      <!-- Top Metric Cards -->
       <div class="compact-grid">
         <div class="mini-card text-danger">
           <span class="lbl">Threat Level</span>
           <div class="val">CRITICAL</div>
         </div>
+
+        <!-- Confidence Score with Color Coding -->
         <div class="mini-card">
           <span class="lbl">AI Confidence</span>
           <div class="val conf-high" id="confScore">94.8%</div>
         </div>
+
         <div class="mini-card">
           <span class="lbl">Traffic Baseline</span>
           <div class="val" id="trafVal">4.2k r/s</div>
         </div>
+
+        <!-- Attack Type Classification Badge -->
         <div class="mini-card">
           <span class="lbl">Attack Vector</span>
-          <div class="badge-attack" id="attackBadge">SYN-FLOOD</div>
+          <div class="badge-attack" id="attackBadge">SYN-FLOOD (DDoS)</div>
         </div>
       </div>
 
+      <!-- Three AI Engines Status Panel -->
       <div class="card">
         <h4>Ensemble AI Engine Pipeline</h4>
         <div class="engine-grid">
@@ -297,6 +105,7 @@
         </div>
       </div>
 
+      <!-- SHAP Explainability Panel -->
       <div class="card">
         <h4>SHAP Feature Attribution (Explainability)</h4>
         <div class="shap-container">
@@ -315,9 +124,15 @@
             <div class="s-bar-bg"><div class="s-bar text-accent-bg" style="width: 45%;"></div></div>
             <span class="s-val">+0.15</span>
           </div>
+          <div class="shap-row">
+            <span class="s-label">Payload Size Deviation</span>
+            <div class="s-bar-bg"><div class="s-bar text-green-bg" style="width: 20%;"></div></div>
+            <span class="s-val">-0.08</span>
+          </div>
         </div>
       </div>
 
+      <!-- Real-Time Traffic vs Predicted Traffic Chart -->
       <div class="card">
         <h4>Real-Time Traffic vs Multi-Horizon Forecast</h4>
         <div class="chart-box">
@@ -325,6 +140,7 @@
         </div>
       </div>
 
+      <!-- Targeted Locations & Origins -->
       <div class="card">
         <h4>Targeted Locations & Origins</h4>
         <div class="map-box">
@@ -332,6 +148,7 @@
         </div>
       </div>
 
+      <!-- Auto-Response Action Log -->
       <div class="card">
         <h4>Auto-Response Action Log</h4>
         <div class="tbl-box">
@@ -344,7 +161,9 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="autoActionTable"></tbody>
+            <tbody id="autoActionTable">
+              <!-- JS Injected -->
+            </tbody>
           </table>
         </div>
       </div>
@@ -353,6 +172,7 @@
 
     <!-- NETWORK RADAR VIEW -->
     <section id="network-radar" class="tab-content">
+      <!-- Network Topology Graph (GNN) -->
       <div class="card">
         <h4>GNN Network Topology Mesh</h4>
         <div class="map-box">
@@ -393,283 +213,15 @@
           <span>Enable Ensemble AI Auto-Mitigation</span>
           <input type="checkbox" checked>
         </div>
+        <div class="sett-row">
+          <span>GNN Graph Depth</span>
+          <input type="range" value="3" min="1" max="5">
+        </div>
       </div>
     </section>
 
   </main>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-      // Theme Switching Logic
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-      const themeText = document.getElementById('themeText');
-      
-      let currentTheme = localStorage.getItem('astra-theme') || 'light';
-
-      function applyTheme(theme) {
-        if (theme === 'dark') {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          if (themeIcon) themeIcon.innerText = '☀️';
-          if (themeText) themeText.innerText = 'Cream';
-        } else {
-          document.documentElement.removeAttribute('data-theme');
-          if (themeIcon) themeIcon.innerText = '🌙';
-          if (themeText) themeText.innerText = 'Dark';
-        }
-        renderDashboardComponents();
-      }
-
-      applyTheme(currentTheme);
-
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
-          localStorage.setItem('astra-theme', currentTheme);
-          applyTheme(currentTheme);
-        });
-      }
-
-      // Drawer and Tab Navigation
-      const menuBtn = document.getElementById('menuBtn');
-      const sidebar = document.getElementById('sidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const navItems = document.querySelectorAll('.nav-item');
-      const tabContents = document.querySelectorAll('.tab-content');
-      const notifBtn = document.getElementById('notifBtn');
-      const notifDrawer = document.getElementById('notifDrawer');
-      const closeNotif = document.getElementById('closeNotif');
-
-      function closeAllDrawers() {
-        sidebar.classList.remove('open');
-        if (notifDrawer) notifDrawer.classList.remove('open');
-        overlay.classList.remove('open');
-      }
-
-      if (menuBtn) menuBtn.addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
-      if (notifBtn) notifBtn.addEventListener('click', () => { notifDrawer.classList.toggle('open'); overlay.classList.toggle('open'); });
-      if (closeNotif) closeNotif.addEventListener('click', closeAllDrawers);
-      if (overlay) overlay.addEventListener('click', closeAllDrawers);
-
-      navItems.forEach(item => {
-        item.addEventListener('click', () => {
-          const tab = item.getAttribute('data-tab');
-          navItems.forEach(i => i.classList.remove('active'));
-          tabContents.forEach(c => c.classList.remove('active'));
-
-          item.classList.add('active');
-          document.getElementById(tab).classList.add('active');
-          closeAllDrawers();
-
-          if (tab === 'network-radar') {
-            renderRadar();
-            renderGNNTopology();
-          }
-          if (tab === 'dashboard') {
-            renderDashboardComponents();
-          }
-        });
-      });
-
-      function renderDashboardComponents() {
-        renderHackerMap();
-        drawTrafficChart();
-        populateActionLog();
-        populateNotifications();
-      }
-
-      function getCanvasBg() {
-        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#121826' : '#ffffff';
-      }
-
-      function getGridColor() {
-        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#1e293b' : '#e2e8f0';
-      }
-
-      function getTextColor() {
-        return document.documentElement.getAttribute('data-theme') === 'dark' ? '#94a3b8' : '#475569';
-      }
-
-      // Traffic Chart Render
-      function drawTrafficChart() {
-        const canvas = document.getElementById('miniChart');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = canvas.parentElement.clientWidth || 300;
-        canvas.height = canvas.parentElement.clientHeight || 140;
-
-        const w = canvas.width, h = canvas.height;
-        const paddingLeft = 30, paddingBottom = 20;
-        const chartW = w - paddingLeft - 10, chartH = h - paddingBottom - 20;
-
-        ctx.fillStyle = getCanvasBg();
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.strokeStyle = getGridColor();
-        ctx.lineWidth = 1;
-        for (let y = 0.2; y <= 1.0; y += 0.2) {
-          const yPos = 10 + chartH * y;
-          ctx.beginPath(); ctx.moveTo(paddingLeft, yPos); ctx.lineTo(w - 10, yPos); ctx.stroke();
-        }
-
-        ctx.strokeStyle = '#ea580c';
-        ctx.setLineDash([2, 2]);
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.05, 10 + chartH * 0.8);
-        ctx.lineTo(paddingLeft + chartW * 0.95, 10 + chartH * 0.75);
-        ctx.stroke();
-
-        ctx.setLineDash([]);
-        ctx.strokeStyle = '#2563eb';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.05, 10 + chartH * 0.8);
-        ctx.lineTo(paddingLeft + chartW * 0.3, 10 + chartH * 0.75);
-        ctx.lineTo(paddingLeft + chartW * 0.5, 10 + chartH * 0.35);
-        ctx.stroke();
-
-        ctx.strokeStyle = '#dc2626';
-        ctx.setLineDash([4, 4]);
-        ctx.beginPath();
-        ctx.moveTo(paddingLeft + chartW * 0.5, 10 + chartH * 0.35);
-        ctx.lineTo(paddingLeft + chartW * 0.95, 10 + chartH * 0.1);
-        ctx.stroke();
-        ctx.setLineDash([]);
-      }
-
-      function renderGNNTopology() {
-        const canvas = document.getElementById('gnnTopologyCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = canvas.parentElement.clientWidth || 300;
-        canvas.height = canvas.parentElement.clientHeight || 160;
-
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = getCanvasBg();
-        ctx.fillRect(0, 0, w, h);
-
-        const nodes = [
-          { id: 'Auth-Node', x: w * 0.2, y: h * 0.3, status: '#dc2626' },
-          { id: 'API-Edge', x: w * 0.5, y: h * 0.2, status: '#2563eb' },
-          { id: 'DB-Core', x: w * 0.8, y: h * 0.4, status: '#059669' },
-          { id: 'Delhi-Node', x: w * 0.35, y: h * 0.7, status: '#dc2626' },
-          { id: 'SG-SafeZone', x: w * 0.7, y: h * 0.75, status: '#059669' }
-        ];
-
-        const edges = [[0, 1], [0, 3], [1, 2], [3, 4], [1, 4]];
-
-        ctx.strokeStyle = getGridColor();
-        ctx.lineWidth = 1.5;
-        edges.forEach(e => {
-          const n1 = nodes[e[0]], n2 = nodes[e[1]];
-          ctx.beginPath(); ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y); ctx.stroke();
-        });
-
-        nodes.forEach(n => {
-          ctx.fillStyle = n.status;
-          ctx.beginPath(); ctx.arc(n.x, n.y, 6, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = getTextColor();
-          ctx.font = '9px sans-serif';
-          ctx.fillText(n.id, n.x + 8, n.y + 3);
-        });
-      }
-
-      function renderHackerMap() {
-        const canvas = document.getElementById('locationMap');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = canvas.parentElement.clientWidth || 300;
-        canvas.height = canvas.parentElement.clientHeight || 160;
-
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = getCanvasBg();
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.strokeStyle = getGridColor();
-        for (let x = 0; x < w; x += 30) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-
-        const locs = [
-          { name: 'Delhi, IN (103.21.244.12)', x: w * 0.6, y: h * 0.45, color: '#dc2626' },
-          { name: 'ASTRA SAFE ZONE (Singapore)', x: w * 0.72, y: h * 0.7, color: '#059669' }
-        ];
-
-        locs.forEach(l => {
-          ctx.fillStyle = l.color;
-          ctx.beginPath(); ctx.arc(l.x, l.y, 5, 0, Math.PI * 2); ctx.fill();
-          ctx.fillStyle = getTextColor();
-          ctx.font = '9px sans-serif';
-          ctx.fillText(l.name, l.x + 8, l.y + 3);
-        });
-      }
-
-      let rAngle = 0;
-      function renderRadar() {
-        const canvas = document.getElementById('radarCanvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = canvas.parentElement.clientWidth || 300;
-        canvas.height = canvas.parentElement.clientHeight || 160;
-
-        const w = canvas.width, h = canvas.height, r = Math.min(w, h) / 2 - 10;
-        const cx = w / 2, cy = h / 2;
-
-        ctx.fillStyle = getCanvasBg();
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.strokeStyle = '#05966933';
-        for (let radius = 20; radius <= r; radius += 25) { ctx.beginPath(); ctx.arc(cx, cy, radius, 0, Math.PI * 2); ctx.stroke(); }
-
-        ctx.save();
-        ctx.translate(cx, cy);
-        ctx.rotate(rAngle);
-        ctx.fillStyle = 'rgba(5, 150, 105, 0.15)';
-        ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, r, 0, Math.PI / 4); ctx.fill();
-        ctx.restore();
-
-        rAngle += 0.04;
-        requestAnimationFrame(renderRadar);
-      }
-
-      function populateActionLog() {
-        const tbody = document.getElementById('autoActionTable');
-        if (!tbody) return;
-        const logs = [
-          { time: 'Now', target: 'Auth-Gateway (Delhi)', action: 'Firewall BGP Blackhole', status: 'EXECUTED', class: 'text-green' },
-          { time: '-2m', target: 'DB-Cluster (Tokyo)', action: 'Rate Limit (100 req/s)', status: 'ACTIVE', class: 'text-accent' },
-          { time: '-15m', target: 'API-Edge (Dallas)', action: 'SYN Cookie Challenge', status: 'MITIGATED', class: 'text-green' }
-        ];
-        tbody.innerHTML = '';
-        logs.forEach(l => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${l.time}</td><td>${l.target}</td><td>${l.action}</td><td class="${l.class}">${l.status}</td>`;
-          tbody.appendChild(tr);
-        });
-      }
-
-      function populateNotifications() {
-        const notifList = document.getElementById('notifList');
-        if (!notifList) return;
-        const notifs = [
-          '🚨 <strong>CRITICAL:</strong> High SYN-Flood anomaly detected in Delhi Node.',
-          '🛡️ <strong>AUTO-MITIGATION:</strong> BGP Drop triggered on 103.21.244.12.',
-          '🤖 <strong>GNN ENGINE:</strong> Neighbor node risk propagation score elevated to 88%.'
-        ];
-        notifList.innerHTML = '';
-        notifs.forEach(n => {
-          const li = document.createElement('li');
-          li.innerHTML = n;
-          notifList.appendChild(li);
-        });
-      }
-
-      renderDashboardComponents();
-      window.addEventListener('resize', renderDashboardComponents);
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
