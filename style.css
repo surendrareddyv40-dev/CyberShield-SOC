@@ -3,7 +3,7 @@
   --bg-card: #ffffff;      /* Pure White Cards */
   --bg-sidebar: #f3efe6;   /* Slightly Darker Cream Sidebar */
   --border-col: #e2dacd;   /* Subtle Warm Border */
-  --txt-main: #1e293b;     /* Dark Charcoal Text for high contrast */
+  --txt-main: #1e293b;     /* Dark Charcoal Text */
   --txt-sub: #64748b;      /* Slate Subtitle Text */
   --accent-blue: #2563eb;   /* Vibrant Blue */
   --accent-red: #dc2626;    /* Red Alert */
@@ -15,19 +15,19 @@
   box-sizing: border-box; 
 }
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg-dark);
-  color: var(--txt-main);
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  background-color: var(--bg-dark) !important;
+  color: var(--txt-main) !important;
   font-size: 12px;
 }
 
 /* Topbar */
 .topbar {
   height: 45px;
-  background: var(--bg-sidebar);
+  background: var(--bg-sidebar) !important;
   border-bottom: 1px solid var(--border-col);
   display: flex;
   align-items: center;
@@ -85,7 +85,7 @@ body {
   z-index: 1100;
   transition: right 0.25s ease-in-out;
   padding: 12px;
-  box-shadow: -4px 0 12px rgba(0,0,0,0.05);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.08);
 }
 
 .notif-drawer.open { 
@@ -136,7 +136,7 @@ body {
   transform: translateX(-100%);
   transition: transform 0.25s ease-in-out;
   z-index: 1000;
-  box-shadow: 4px 0 12px rgba(0,0,0,0.05);
+  box-shadow: 4px 0 12px rgba(0,0,0,0.08);
 }
 
 .sidebar.open { 
@@ -147,7 +147,7 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.3);
   z-index: 999;
 }
 
@@ -187,6 +187,7 @@ body {
 /* Main Layout */
 .main-container { 
   padding: 10px; 
+  background-color: var(--bg-dark) !important;
 }
 
 .tab-content { 
@@ -197,7 +198,7 @@ body {
   display: block; 
 }
 
-/* Multi-Horizon Panel */
+/* Horizon Selector */
 .horizon-panel { 
   display: flex; 
   align-items: center; 
@@ -230,10 +231,11 @@ body {
 }
 
 .mini-card { 
-  background: var(--bg-card); 
+  background: var(--bg-card) !important; 
   border: 1px solid var(--border-col); 
   padding: 8px 10px; 
   border-radius: 6px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .mini-card .lbl { 
@@ -248,14 +250,14 @@ body {
   margin-top: 2px; 
 }
 
-/* Confidence & Badge Styling */
+/* Confidence & Badges */
 .conf-high { color: var(--accent-green); }
 .conf-med { color: var(--accent-orange); }
 .conf-low { color: var(--accent-red); }
 
 .badge-attack {
   display: inline-block;
-  background: rgba(220, 38, 38, 0.1);
+  background: rgba(220, 38, 38, 0.08);
   color: var(--accent-red);
   border: 1px solid var(--accent-red);
   padding: 2px 6px;
@@ -273,7 +275,7 @@ body {
 }
 
 .engine-status { 
-  background: var(--bg-dark); 
+  background: var(--bg-sidebar); 
   border: 1px solid var(--border-col); 
   padding: 6px; 
   border-radius: 4px; 
@@ -317,7 +319,7 @@ body {
 .s-bar-bg { 
   flex: 1; 
   height: 6px; 
-  background: var(--bg-dark); 
+  background: var(--bg-sidebar); 
   border-radius: 3px; 
   overflow: hidden; 
 }
@@ -341,11 +343,12 @@ body {
 
 /* Card Utilities */
 .card { 
-  background: var(--bg-card); 
+  background: var(--bg-card) !important; 
   border: 1px solid var(--border-col); 
   border-radius: 6px; 
   padding: 10px; 
   margin-bottom: 10px; 
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
 .card h4 { 
@@ -359,12 +362,16 @@ body {
   height: 160px; 
   width: 100%; 
   position: relative; 
+  background: #ffffff;
+  border-radius: 4px;
 }
 
 .chart-box { 
   height: 140px; 
   width: 100%; 
   position: relative; 
+  background: #ffffff;
+  border-radius: 4px;
 }
 
 canvas { 
@@ -402,8 +409,8 @@ th {
 code { 
   color: var(--accent-orange); 
   font-size: 10px; 
-  background: var(--bg-dark);
-  padding: 2px 4px;
+  background: var(--bg-sidebar);
+  padding: 3px 6px;
   border-radius: 3px;
 }
 
